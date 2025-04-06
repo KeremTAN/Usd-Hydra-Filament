@@ -1,0 +1,24 @@
+First, clone usd from filament repository of Google at Gitub.
+Then compile Filament Engine.
+
+Terminal Input:
+./build.sh -c -p desktop -l -i debug release
+
+-c clean
+-p development environment
+-l universal arch.
+-i install
+
+// CMake Alternative
+mkdir out/cmake-release
+cd out/cmake-release
+cmake -G Ninja -DCMAKE_BUILD_TYPE=Release \
+-DCMAKE_CXX_STANDARD=20 \
+-DCMAKE_CXX_STANDARD_REQUIRED=ON \ 
+-DCMAKE_CXX_EXTENSIONS=OFF \
+-DCMAKE_C_COMPILER=${CC} \
+-DCMAKE_CXX_COMPILER=${CXX} \
+-DFILAMENT_ENABLE_LTO=ON \ 
+-DFILAMENT_SKIP_SAMPLES=OFF \ 
+-DFILAMENT_SUPPORTS_VULKAN=OFF \
+-DFILAMENT_SUPPORTS_METAL=ON ..

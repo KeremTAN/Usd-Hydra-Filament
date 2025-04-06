@@ -1,0 +1,74 @@
+First, clone usd from OpenUSD repository of pixar at Gitub.
+Then compile OpenUSD.
+
+Note:
+There will be a problem about MaterialX when you compile usd with llvm20.
+Therfore, I used llvm19 as a compiler.
+
+[ Terminal Input ]:
+python3 build_scripts/build_usd.py \
+    --build-variant release \
+    --cmake-build-args="-DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm@19/bin/clang++ \
+                       -DCMAKE_OSX_ARCHITECTURES=arm64 \
+                       -DPXR_ENABLE_METAL_SUPPORT=ON \
+                       -DPXR_ENABLE_HYDRA_SUPPORT=ON \
+                       -DPXR_BUILD_MONOLITHIC=OFF \
+                       -DPXR_STRICT_BUILD_MODE=OFF \
+                       -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+                       -DCMAKE_CXX_STANDARD=20 \
+                       -DCMAKE_CXX_STANDARD_REQUIRED=ON" \
+    /Users/<your/directory/path>/OpenUSD/release
+
+  
+[ Terminal Output ]:
+Building with settings:
+  USD source directory          /Users/<your/directory/path>/OpenUSD
+  USD install directory         /Users/<your/directory/path>/OpenUSD/release
+  3rd-party source directory    /Users/<your/directory/path>/OpenUSD/release/src
+  3rd-party install directory   /Users/<your/directory/path>/OpenUSD/release
+  Build directory               /Users/<your/directory/path>/OpenUSD/release/build
+  CMake generator               Default
+  CMake toolset                 Default
+  Downloader                    curl
+
+  Building                      Shared libraries
+    Variant                     Release
+    Target                      native
+    UsdValidation               On
+    Imaging                     On
+      Ptex support:             Off
+      OpenVDB support:          Off
+      OpenImageIO support:      Off 
+      OpenColorIO support:      Off 
+      PRMan support:            Off
+      Vulkan support:           Off
+    UsdImaging                  On
+      usdview:                  On
+    MaterialX support           On
+    Python support              On
+      Python Debug:             Off
+      Python docs:              Off
+    Documentation               Off
+    Tests                       Off
+      Mayapy Tests:             Off
+      AnimX Tests:              Off
+    Examples                    On
+    Tutorials                   On
+    Tools                       On
+    Alembic Plugin              Off
+      HDF5 support:             Off
+    Draco Plugin                Off
+
+  Dependencies                  TBB, MaterialX, OpenSubdiv
+STATUS: Installing TBB...
+STATUS: Installing MaterialX...
+STATUS: Installing OpenSubdiv...
+STATUS: Installing USD...
+
+Success! To use USD, please ensure that you have:
+
+    The following in your PYTHONPATH environment variable:
+    /Users/<your/directory/path>/OpenUSD/release/lib/python
+
+    The following in your PATH environment variable:
+    /Users/<your/directory/path>/OpenUSD/release/bin
