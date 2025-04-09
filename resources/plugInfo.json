@@ -4,7 +4,7 @@
       "Type": "library",
       "Name": "tutorialPlugin",
       "Root": "/Users/kerem/Desktop/UsdHydraFilament/",
-      "LibraryPath": "/Users/kerem/Desktop/UsdHydraFilament/build/HdTutorial.dylib",
+      "LibraryPath": "/Users/kerem/Desktop/UsdHydraFilament/build/libHdTutorial.dylib",
       "Info": {
         "DisplayName": "Tutorial Renderer",
         "Identifier": "tutorialRenderer",
