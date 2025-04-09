@@ -8,15 +8,22 @@ Therfore, I used llvm19 as a compiler.
 [ Terminal Input ]:
 python3 build_scripts/build_usd.py \
     --build-variant release \
-    --cmake-build-args="-DCMAKE_CXX_COMPILER=/opt/homebrew/opt/llvm@19/bin/clang++ \
-                       -DCMAKE_OSX_ARCHITECTURES=arm64 \
-                       -DPXR_ENABLE_METAL_SUPPORT=ON \
-                       -DPXR_ENABLE_HYDRA_SUPPORT=ON \
-                       -DPXR_BUILD_MONOLITHIC=OFF \
-                       -DPXR_STRICT_BUILD_MODE=OFF \
-                       -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
-                       -DCMAKE_CXX_STANDARD=20 \
-                       -DCMAKE_CXX_STANDARD_REQUIRED=ON" \
+    --cmake-build-args="
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON 
+    -DPXR_ENABLE_PYTHON_SUPPORT=ON
+    -DPython_EXECUTABLE=/opt/homebrew/bin/python3.10 \
+    -DPython_INCLUDE_DIR=/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10
+    -DPython_LIBRARY=/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib
+    -DPXR_PYSIDE_UIC_EXECUTABLE=/opt/homebrew/bin/pyside6-uic \
+    -DPXR_ENABLE_METAL_SUPPORT=ON 
+    -DPXR_ENABLE_HYDRA_SUPPORT=ON 
+    -DPXR_ENABLE_GL_SUPPORT=ON
+    -DPXR_BUILD_FILAMENT_PLUGIN=ON 
+    -DFILAMENT_ROOT=/Users/<your/directory/path>/filament/release/filament/
+    -DPXR_BUILD_EMBREE_PLUGIN=OFF 
+    -DPXR_BUILD_MONOLITHIC=OFF
+    -DCMAKE_CXX_STANDARD=20
+    -DCMAKE_OSX_ARCHITECTURES=arm64"  \
     /Users/<your/directory/path>/OpenUSD/release
 
   
@@ -72,3 +79,27 @@ Success! To use USD, please ensure that you have:
 
     The following in your PATH environment variable:
     /Users/<your/directory/path>/OpenUSD/release/bin
+
+CMAKE ALTERNATIVE
+cmake ..                                  \
+-DCMAKE_BUILD_TYPE=Release \
+    -DCMAKE_INSTALL_PREFIX=/Users/<your/directory/path>/OpenUSD/release  \
+    -DTBB_ROOT_DIR=/opt/homebrew/Cellar/tbb/2022.1.0                 \
+    -DOPENSUBDIV_ROOT_DIR=/opt/homebrew/Cellar/opensubdiv/3.6.0   \
+    -DPython_EXECUTABLE=/opt/homebrew/bin/python3.10 \
+    -DPython_INCLUDE_DIR=/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/include/python3.10 \
+    -DPython_LIBRARY=/opt/homebrew/opt/python@3.10/Frameworks/Python.framework/Versions/3.10/lib/libpython3.10.dylib \
+    -DPXR_PYSIDE_UIC_EXECUTABLE=/opt/homebrew/bin/pyside6-uic \
+    -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+    -DPXR_ENABLE_PYTHON_SUPPORT=ON \
+    -DPXR_ENABLE_METAL_SUPPORT=ON \
+    -DPXR_ENABLE_HYDRA_SUPPORT=ON \
+    -DPXR_ENABLE_GL_SUPPORT=ON \
+    -DPXR_BUILD_FILAMENT_PLUGIN=ON \
+    -DFILAMENT_ROOT=/Users/<your/directory/path>/UsdHydraFilament/third_party/filament/release/filament/ \
+    -DPXR_BUILD_EMBREE_PLUGIN=OFF\
+    -DPXR_BUILD_MONOLITHIC=OFF\
+    -DCMAKE_CXX_STANDARD=20
+
+cmake --build . --target all -j$(sysctl -n hw.ncpu)
+cmake --build . --target install
