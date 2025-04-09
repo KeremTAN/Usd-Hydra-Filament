@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.27)
 
-# set(CMAKE_C_COMPILER "/opt/homebrew/opt/llvm@19/bin/clang")
-# set(CMAKE_CXX_COMPILER "/opt/homebrew/opt/llvm@19/bin/clang++")
+set(CMAKE_C_COMPILER "/opt/homebrew/opt/llvm@19/bin/clang")
+set(CMAKE_CXX_COMPILER "/opt/homebrew/opt/llvm@19/bin/clang++")
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -33,8 +33,7 @@ message(STATUS "[ COMPILER VERSION   ] : ${CMAKE_CXX_COMPILER_VERSION}")
 message(STATUS "[ CXX STANDARD       ] : ${CMAKE_CXX_STANDARD}")
 
 
-find_package(pxr REQUIRED CONFIG PATHS "${USD_ROOT}" NO_DEFAULT_PATH)
-find_package(TBB REQUIRED)
+find_package(pxr REQUIRED CONFIG PATHS "${USD_ROOT}")
 
 add_executable(my_program ${sources})
 
@@ -47,7 +46,6 @@ target_link_libraries(my_program
     usdHydra
     usdImaging
     ${FILAMENT_LIBS}
-    TBB::tbb
     "-framework Metal"
     "-framework Cocoa"
     "-framework CoreVideo" 
