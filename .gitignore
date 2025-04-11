@@ -2,5 +2,5 @@
 build
 build-xcode
 third_party/filament
-third_party/filament_old
+third_party/olds
 third_party/usd

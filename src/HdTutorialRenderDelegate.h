@@ -5,7 +5,7 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-class __attribute__((visibility("default")))  HdTutorialRenderDelegate : public HdRenderDelegate {
+class HdTutorialRenderDelegate : public HdRenderDelegate {
 public:
     HdTutorialRenderDelegate() = default;
     virtual ~HdTutorialRenderDelegate()  = default;

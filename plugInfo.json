@@ -1,0 +1,19 @@
+{
+  "Plugins": [
+    {
+      "Type": "library",
+      "Name": "HdTutorial",
+      "Root": "/Users/kerem/Desktop/UsdHydraFilament",
+      "LibraryPath": "build/HdTutorial.dylib",
+      "Info": {
+        "Types": {
+          "HdTutorialRendererPlugin": {
+            "bases": ["HdRendererPlugin"],
+            "displayName": "Tutorial Renderer",
+            "priority": 0
+          }
+        }
+      }
+    }
+  ]
+}

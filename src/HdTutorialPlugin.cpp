@@ -4,7 +4,7 @@
 
 PXR_NAMESPACE_OPEN_SCOPE;
 
-class __attribute__((visibility("default"))) HdTutorialPlugin : public HdRendererPlugin {
+class HdTutorialPlugin : public HdRendererPlugin {
 public:
     HdTutorialPlugin()  = default;
     virtual ~HdTutorialPlugin()  = default;
