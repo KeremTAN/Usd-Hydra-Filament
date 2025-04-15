@@ -3,12 +3,16 @@
 #include <pxr/imaging/hd/resourceRegistry.h>
 #include <vector>
 
+#include <filament/Engine.h>
+#include <filament/Renderer.h>
+#include <filament/Scene.h>
+
 PXR_NAMESPACE_OPEN_SCOPE
 
-class HdTutorialRenderDelegate : public HdRenderDelegate {
+class FilamentRenderDelegate : public HdRenderDelegate {
 public:
-    HdTutorialRenderDelegate() = default;
-    virtual ~HdTutorialRenderDelegate()  = default;
+    FilamentRenderDelegate() = default;
+    virtual ~FilamentRenderDelegate()  = default;
 
     virtual const TfTokenVector& GetSupportedRprimTypes() const override { }
     virtual const TfTokenVector& GetSupportedSprimTypes() const override { }
@@ -43,6 +47,8 @@ public:
     virtual void DestroyBprim(HdBprim *bprim) override { }
 
     virtual void CommitResources(HdChangeTracker *tracker) override { }
+private:
+    filament::Engine* engine = filament::Engine::create();
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE

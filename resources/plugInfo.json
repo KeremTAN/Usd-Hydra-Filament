@@ -9,7 +9,7 @@
         "Types": {
           "HdTutorialRendererPlugin": {
             "bases": ["HdRendererPlugin"],
-            "displayName": "Tutorial Renderer",
+            "displayName": "Filament",
             "priority": 0
           }
         }

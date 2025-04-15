@@ -12,6 +12,14 @@ set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(pxr REQUIRED COMPONENTS hd)
 
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+    set(FILAMENT_ROOT "third_party/filament/debug/filament/")
+elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(FILAMENT_ROOT "third_party/filament/release/filament/")
+endif()
+
+file(GLOB FILAMENT_LIBS "${FILAMENT_ROOT}/lib/universal/*.a" "${FILAMENT_ROOT}/lib/universal/*.dylib")
+
 file(GLOB headers "${CMAKE_SOURCE_DIR}/headers/*.h")
 file(GLOB sources "${CMAKE_SOURCE_DIR}/src/*.cpp")
 
@@ -21,10 +29,22 @@ add_library(HdTutorial SHARED
     ${sources}
 )
 
-target_include_directories(HdTutorial PUBLIC ${USD_INCLUDE_DIRS} ${headers})
-target_link_libraries(HdTutorial PRIVATE hd)
-set_target_properties(HdTutorial PROPERTIES INSTALL_RPATH "@loader_path")
+target_include_directories(HdTutorial PUBLIC
+${USD_INCLUDE_DIRS}
+${headers}
+${FILAMENT_ROOT}/include
+)
 
+target_link_libraries(HdTutorial PRIVATE
+hd
+${FILAMENT_LIBS}
+"-framework Metal"
+"-framework Cocoa"
+"-framework CoreVideo" 
+)
+
+
+set_target_properties(HdTutorial PROPERTIES INSTALL_RPATH "@loader_path")
 
 if(UNIX)
   target_compile_options(HdTutorial PRIVATE -fPIC)
