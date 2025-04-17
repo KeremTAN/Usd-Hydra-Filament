@@ -1,6 +1,7 @@
 .DS_STORE
 build
 build-xcode
+third_party/code_examples
 third_party/filament
 third_party/olds
 third_party/usd

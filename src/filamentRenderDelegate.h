@@ -1,7 +1,5 @@
+#include <pxr/pxr.h>
 #include <pxr/imaging/hd/renderDelegate.h>
-#include <pxr/base/tf/token.h>
-#include <pxr/imaging/hd/resourceRegistry.h>
-#include <vector>
 
 #include <filament/Engine.h>
 #include <filament/Renderer.h>
@@ -11,44 +9,47 @@ PXR_NAMESPACE_OPEN_SCOPE
 
 class FilamentRenderDelegate : public HdRenderDelegate {
 public:
-    FilamentRenderDelegate() = default;
+    FilamentRenderDelegate() : m_engine(
+        filament::Engine::create(),
+        [](filament::Engine* e) { 
+            filament::Engine::destroy(&e);
+        }) // end of m_engine 
+    {}
+
     virtual ~FilamentRenderDelegate()  = default;
 
-    virtual const TfTokenVector& GetSupportedRprimTypes() const override { }
-    virtual const TfTokenVector& GetSupportedSprimTypes() const override { }
-    virtual const TfTokenVector& GetSupportedBprimTypes() const override { }
+    virtual const TfTokenVector& GetSupportedRprimTypes() const override;
+    virtual const TfTokenVector& GetSupportedSprimTypes() const override;
+    virtual const TfTokenVector& GetSupportedBprimTypes() const override;
 
-    virtual HdResourceRegistrySharedPtr GetResourceRegistry() const override { }
+    virtual HdResourceRegistrySharedPtr GetResourceRegistry() const override;
 
     virtual HdRenderPassSharedPtr CreateRenderPass(HdRenderIndex *index,
-                HdRprimCollection const& collection) override { }
+                HdRprimCollection const& collection) override;
 
-    virtual HdInstancer* CreateInstancer(HdSceneDelegate *delegate, SdfPath const &instancerId) override { }
+    virtual HdInstancer* CreateInstancer(HdSceneDelegate *delegate, SdfPath const &instancerId) override;
 
-    virtual void DestroyInstancer(HdInstancer *instancer) override { }
+    virtual void DestroyInstancer(HdInstancer *instancer) override;
     
-    virtual HdRprim* CreateRprim(TfToken const& typeId,
-                                SdfPath const& rprimId) override { }
+    virtual HdRprim* CreateRprim(TfToken const& typeId, SdfPath const& rprimId) override;
     
-    virtual void DestroyRprim(HdRprim *rPrim) override { }
+    virtual void DestroyRprim(HdRprim *rPrim) override;
     
-    virtual HdSprim* CreateSprim(TfToken const& typeId,
-                                SdfPath const& sprimId) override { }
+    virtual HdSprim* CreateSprim(TfToken const& typeId, SdfPath const& sprimId) override;
 
-    virtual HdSprim* CreateFallbackSprim(TfToken const &typeId) override { }
+    virtual HdSprim* CreateFallbackSprim(TfToken const &typeId) override;
 
-    virtual void DestroySprim(HdSprim *sprim) override { }
+    virtual void DestroySprim(HdSprim *sprim) override;
 
-    virtual HdBprim* CreateBprim(TfToken const& typeId,
-                                SdfPath const& bprimId) override { }
+    virtual HdBprim* CreateBprim(TfToken const& typeId, SdfPath const& bprimId) override;
 
-    virtual HdBprim* CreateFallbackBprim(TfToken const &typeId) override { }
+    virtual HdBprim* CreateFallbackBprim(TfToken const &typeId) override;
 
-    virtual void DestroyBprim(HdBprim *bprim) override { }
+    virtual void DestroyBprim(HdBprim *bprim) override;
 
-    virtual void CommitResources(HdChangeTracker *tracker) override { }
+    virtual void CommitResources(HdChangeTracker *tracker) override;
 private:
-    filament::Engine* engine = filament::Engine::create();
+    std::shared_ptr<filament::Engine> m_engine{};
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE
