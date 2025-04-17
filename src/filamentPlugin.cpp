@@ -1,35 +1,36 @@
-#include <pxr/imaging/hd/rendererPlugin.h>
-#include <pxr/imaging/hd/rendererPluginRegistry.h>
-#include "filamentRenderDelegate.h"
+#include <pxr/pxr.h>
+#include "filamentPlugin.h"
 
-PXR_NAMESPACE_OPEN_SCOPE;
-
-class FilamentPlugin : public HdRendererPlugin {
-public:
-    FilamentPlugin()  = default;
-    virtual ~FilamentPlugin()  = default;
-
-    // RenderDelegate oluşturma
-    virtual HdRenderDelegate *CreateRenderDelegate() override {
-        printf("[Tutorial Plugin] RenderDelegate created!\n");
-        return new FilamentRenderDelegate();
-    }
-
-    // DeleteRenderDelegate implementation (required pure virtual method)
-    virtual void DeleteRenderDelegate(HdRenderDelegate *renderDelegate) override {
-        delete renderDelegate;
-    }
-
-    // Plugin destek kontrolü - corrected signature to match base class
-    virtual bool IsSupported(bool gpuEnabled = true) const override { 
-        return true; 
-    }
-};
+PXR_NAMESPACE_OPEN_SCOPE
 
 TF_REGISTRY_FUNCTION(TfType) {
     HdRendererPluginRegistry::Define<FilamentPlugin>();
-  }
+}
+
+HdRenderDelegate* FilamentPlugin::CreateRenderDelegate() {
+    return new FilamentRenderDelegate();
+}
+
+// HdRenderDelegate* FilamentPlugin::CreateRenderDelegate(const HdRenderSettingsMap& settingsMap) {
+//     return new FilamentRenderDelegate(settingsMap);
+// }
+
+void FilamentPlugin::DeleteRenderDelegate(HdRenderDelegate* renderDelegate) {
+    delete renderDelegate;
+}
+
+bool FilamentPlugin::IsSupported(bool gpuEnabled) const {
+    const bool support = gpuEnabled && FilamentPlugin::IsSupported();
+    if (!support) {
+        TF_DEBUG(HD_RENDERER_PLUGIN).Msg(
+            "hdFilament renderer plugin unsupported: %s\n",
+            gpuEnabled ? "filament engine unsupported" : "no gpu");
+    }
+    return support;
+}
 
 PXR_NAMESPACE_CLOSE_SCOPE
+
+
 
 
