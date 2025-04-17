@@ -19,8 +19,11 @@ void FilamentPlugin::DeleteRenderDelegate(HdRenderDelegate* renderDelegate) {
     delete renderDelegate;
 }
 
+/**
+ * TODO: it will be updated when FilamentRenderDelegate::IsSupported() impl. figure out
+ */
 bool FilamentPlugin::IsSupported(bool gpuEnabled) const {
-    const bool support = gpuEnabled && FilamentPlugin::IsSupported();
+    const bool support = gpuEnabled /* && FilamentRenderDelegate::IsSupported() */;
     if (!support) {
         TF_DEBUG(HD_RENDERER_PLUGIN).Msg(
             "hdFilament renderer plugin unsupported: %s\n",
