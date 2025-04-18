@@ -10,13 +10,7 @@ public:
 
     ~FilRenPass() = default;
 
-    bool IsConverged() const override;
-
     void _Execute(HdRenderPassStateSharedPtr const& renderPassState, TfTokenVector const& renderTags) override;
-
-    void _MarkCollectionDirty() override;
-
-    void _Sync() override;
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE
