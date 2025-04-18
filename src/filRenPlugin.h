@@ -2,15 +2,15 @@
 #include <pxr/pxr.h>
 #include <pxr/imaging/hd/rendererPlugin.h>
 #include <pxr/imaging/hd/rendererPluginRegistry.h>
-#include "filamentRenderDelegate.h"
+#include "filRenDelegate.h"
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-class FilamentPlugin final : public HdRendererPlugin {
+class FilRenPlugin final : public HdRendererPlugin {
 public:
     
-    FilamentPlugin()  = default;
-    ~FilamentPlugin()  = default;
+    FilRenPlugin()  = default;
+    ~FilRenPlugin()  = default;
        
     HdRenderDelegate* CreateRenderDelegate() override;
     // virtual HdRenderDelegate* CreateRenderDelegate(const HdRenderSettingsMap& settingsMap) override;

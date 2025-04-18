@@ -2,13 +2,13 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-class FilamentRenderPass final : public HdRenderPass {
+class FilRenPass final : public HdRenderPass {
 public:
-    FilamentRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) : 
+    FilRenPass(HdRenderIndex* index, HdRprimCollection const& collection) : 
         HdRenderPass(index, collection) 
     {}
 
-    ~FilamentRenderPass() = default;
+    ~FilRenPass() = default;
 
     bool IsConverged() const override;
 

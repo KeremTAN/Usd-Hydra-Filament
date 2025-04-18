@@ -12,13 +12,13 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-class FilamentRenderDelegate final : public HdRenderDelegate {
+class FilRenDelegate final : public HdRenderDelegate {
 public:
     /**
      * delete ptr is not healty way to deallocate Filament eng.
      * Therefore, custom deleter is defined while shared_ptr is used
      */
-    FilamentRenderDelegate() :
+    FilRenDelegate() :
         m_recourcesRegistry(std::make_shared<HdResourceRegistry>()),
         m_engine(filament::Engine::create(),
             [](filament::Engine* e) { 
@@ -32,9 +32,9 @@ public:
         m_sprimTypes.push_back(HdPrimTypeTokens->light);
     
         m_bprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
-    } // end of FilamentRenderDelegate
+    } // end of FilRenDelegate
 
-    ~FilamentRenderDelegate() = default;
+    ~FilRenDelegate() = default;
 
     const TfTokenVector& GetSupportedRprimTypes() const override;
     const TfTokenVector& GetSupportedSprimTypes() const override;
