@@ -1,4 +1,9 @@
 #include <pxr/pxr.h>
+#include <pxr/imaging/hd/tokens.h>
+#include <pxr/imaging/hd/extComputation.h>
+#include <pxr/imaging/hd/resourceRegistry.h>
+#include <pxr/imaging/hd/camera.h>
+#include <pxr/imaging/hd/bprim.h>
 #include <pxr/imaging/hd/renderDelegate.h>
 
 #include <filament/Engine.h>
@@ -9,47 +14,61 @@ PXR_NAMESPACE_OPEN_SCOPE
 
 class FilamentRenderDelegate : public HdRenderDelegate {
 public:
+    /**
+     * delete ptr is not healty way to deallocate Filament eng.
+     * Therefore, custom deleter is defined while shared_ptr is used
+     */
     FilamentRenderDelegate() : m_engine(
         filament::Engine::create(),
         [](filament::Engine* e) { 
             filament::Engine::destroy(&e);
         }) // end of m_engine 
-    {}
-
-    virtual ~FilamentRenderDelegate()  = default;
-
-    virtual const TfTokenVector& GetSupportedRprimTypes() const override;
-    virtual const TfTokenVector& GetSupportedSprimTypes() const override;
-    virtual const TfTokenVector& GetSupportedBprimTypes() const override;
-
-    virtual HdResourceRegistrySharedPtr GetResourceRegistry() const override;
-
-    virtual HdRenderPassSharedPtr CreateRenderPass(HdRenderIndex *index,
-                HdRprimCollection const& collection) override;
-
-    virtual HdInstancer* CreateInstancer(HdSceneDelegate *delegate, SdfPath const &instancerId) override;
-
-    virtual void DestroyInstancer(HdInstancer *instancer) override;
+    {
+        m_supportedRprimTypes.push_back(HdPrimTypeTokens->mesh);
+        m_supportedSprimTypes.push_back(HdPrimTypeTokens->camera);
+        m_supportedSprimTypes.push_back(HdPrimTypeTokens->material);
+        m_supportedSprimTypes.push_back(HdPrimTypeTokens->light);
     
-    virtual HdRprim* CreateRprim(TfToken const& typeId, SdfPath const& rprimId) override;
+        m_supportedBprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
+    } // end of FilamentRenderDelegate
+
+    ~FilamentRenderDelegate()  = default;
+
+    const TfTokenVector& GetSupportedRprimTypes() const override;
+    const TfTokenVector& GetSupportedSprimTypes() const override;
+    const TfTokenVector& GetSupportedBprimTypes() const override;
+
+    HdResourceRegistrySharedPtr GetResourceRegistry() const override;
+
+    HdRenderPassSharedPtr CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) override;
+
+    HdInstancer* CreateInstancer(HdSceneDelegate* delegate, SdfPath const& instancerId) override;
+
+    void DestroyInstancer(HdInstancer* instancer) override;
     
-    virtual void DestroyRprim(HdRprim *rPrim) override;
+    HdRprim* CreateRprim(TfToken const& typeId, SdfPath const& rprimId) override;
     
-    virtual HdSprim* CreateSprim(TfToken const& typeId, SdfPath const& sprimId) override;
+    void DestroyRprim(HdRprim* rPrim) override;
+    
+    HdSprim* CreateSprim(TfToken const& typeId, SdfPath const& sprimId) override;
 
-    virtual HdSprim* CreateFallbackSprim(TfToken const &typeId) override;
+    HdSprim* CreateFallbackSprim(TfToken const& typeId) override;
 
-    virtual void DestroySprim(HdSprim *sprim) override;
+    void DestroySprim(HdSprim* sprim) override;
 
-    virtual HdBprim* CreateBprim(TfToken const& typeId, SdfPath const& bprimId) override;
+    HdBprim* CreateBprim(TfToken const& typeId, SdfPath const& bprimId) override;
 
-    virtual HdBprim* CreateFallbackBprim(TfToken const &typeId) override;
+    HdBprim* CreateFallbackBprim(TfToken const& typeId) override;
 
-    virtual void DestroyBprim(HdBprim *bprim) override;
+    void DestroyBprim(HdBprim* bprim) override;
 
-    virtual void CommitResources(HdChangeTracker *tracker) override;
+    void CommitResources(HdChangeTracker* tracker) override;
+
 private:
     std::shared_ptr<filament::Engine> m_engine{};
+    TfTokenVector m_supportedRprimTypes;
+    TfTokenVector m_supportedSprimTypes;
+    TfTokenVector m_supportedBprimTypes;
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE
