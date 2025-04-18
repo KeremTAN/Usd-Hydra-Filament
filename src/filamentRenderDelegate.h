@@ -18,18 +18,20 @@ public:
      * delete ptr is not healty way to deallocate Filament eng.
      * Therefore, custom deleter is defined while shared_ptr is used
      */
-    FilamentRenderDelegate() : m_engine(
-        filament::Engine::create(),
-        [](filament::Engine* e) { 
-            filament::Engine::destroy(&e);
-        }) // end of m_engine 
+    FilamentRenderDelegate() :
+        m_recourcesRegistry(std::make_shared<HdResourceRegistry>()),
+        m_engine(filament::Engine::create(),
+            [](filament::Engine* e) { 
+                filament::Engine::destroy(&e);
+            }
+        ) // end of m_engine 
     {
-        m_RprimTypes.push_back(HdPrimTypeTokens->mesh);
-        m_SprimTypes.push_back(HdPrimTypeTokens->camera);
-        m_SprimTypes.push_back(HdPrimTypeTokens->material);
-        m_SprimTypes.push_back(HdPrimTypeTokens->light);
+        m_rprimTypes.push_back(HdPrimTypeTokens->mesh);
+        m_sprimTypes.push_back(HdPrimTypeTokens->camera);
+        m_sprimTypes.push_back(HdPrimTypeTokens->material);
+        m_sprimTypes.push_back(HdPrimTypeTokens->light);
     
-        m_BprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
+        m_bprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
     } // end of FilamentRenderDelegate
 
     ~FilamentRenderDelegate()  = default;
@@ -66,9 +68,10 @@ public:
 
 private:
     std::shared_ptr<filament::Engine> m_engine{};
-    TfTokenVector m_RprimTypes{};
-    TfTokenVector m_SprimTypes{};
-    TfTokenVector m_BprimTypes{};
+    TfTokenVector m_rprimTypes{};
+    TfTokenVector m_sprimTypes{};
+    TfTokenVector m_bprimTypes{};
+    HdResourceRegistrySharedPtr m_recourcesRegistry{};
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE
