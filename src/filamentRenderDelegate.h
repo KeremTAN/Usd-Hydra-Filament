@@ -24,12 +24,12 @@ public:
             filament::Engine::destroy(&e);
         }) // end of m_engine 
     {
-        m_supportedRprimTypes.push_back(HdPrimTypeTokens->mesh);
-        m_supportedSprimTypes.push_back(HdPrimTypeTokens->camera);
-        m_supportedSprimTypes.push_back(HdPrimTypeTokens->material);
-        m_supportedSprimTypes.push_back(HdPrimTypeTokens->light);
+        m_RprimTypes.push_back(HdPrimTypeTokens->mesh);
+        m_SprimTypes.push_back(HdPrimTypeTokens->camera);
+        m_SprimTypes.push_back(HdPrimTypeTokens->material);
+        m_SprimTypes.push_back(HdPrimTypeTokens->light);
     
-        m_supportedBprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
+        m_BprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
     } // end of FilamentRenderDelegate
 
     ~FilamentRenderDelegate()  = default;
@@ -66,9 +66,9 @@ public:
 
 private:
     std::shared_ptr<filament::Engine> m_engine{};
-    TfTokenVector m_supportedRprimTypes;
-    TfTokenVector m_supportedSprimTypes;
-    TfTokenVector m_supportedBprimTypes;
+    TfTokenVector m_RprimTypes{};
+    TfTokenVector m_SprimTypes{};
+    TfTokenVector m_BprimTypes{};
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE

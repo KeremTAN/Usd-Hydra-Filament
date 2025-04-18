@@ -5,9 +5,15 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-const TfTokenVector& FilamentRenderDelegate::GetSupportedRprimTypes() const { }
-const TfTokenVector& FilamentRenderDelegate::GetSupportedSprimTypes() const { }
-const TfTokenVector& FilamentRenderDelegate::GetSupportedBprimTypes() const { }
+const TfTokenVector& FilamentRenderDelegate::GetSupportedRprimTypes() const {
+    return m_RprimTypes;
+}
+const TfTokenVector& FilamentRenderDelegate::GetSupportedSprimTypes() const {
+    return m_SprimTypes;
+ }
+const TfTokenVector& FilamentRenderDelegate::GetSupportedBprimTypes() const { 
+    return m_BprimTypes;
+}
 
 HdResourceRegistrySharedPtr FilamentRenderDelegate::GetResourceRegistry() const { }
 
