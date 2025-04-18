@@ -3,7 +3,6 @@
 #include <pxr/imaging/hd/extComputation.h>
 #include <pxr/imaging/hd/resourceRegistry.h>
 #include <pxr/imaging/hd/camera.h>
-#include <pxr/imaging/hd/bprim.h>
 #include <pxr/imaging/hd/renderDelegate.h>
 
 #include <filament/Engine.h>
@@ -26,12 +25,11 @@ public:
             }
         ) // end of m_engine 
     {
-        m_rprimTypes.push_back(HdPrimTypeTokens->mesh);
-        m_sprimTypes.push_back(HdPrimTypeTokens->camera);
-        m_sprimTypes.push_back(HdPrimTypeTokens->material);
-        m_sprimTypes.push_back(HdPrimTypeTokens->light);
-    
-        m_bprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
+        m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
+        m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
+        m_sPrimTypes.push_back(HdPrimTypeTokens->material);
+        m_sPrimTypes.push_back(HdPrimTypeTokens->light);
+        m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
     } // end of FilRenDelegate
 
     ~FilRenDelegate() = default;
@@ -56,21 +54,21 @@ public:
 
     HdSprim* CreateFallbackSprim(TfToken const& typeId) override;
 
-    void DestroySprim(HdSprim* sprim) override;
+    void DestroySprim(HdSprim* sPrim) override;
 
     HdBprim* CreateBprim(TfToken const& typeId, SdfPath const& bprimId) override;
 
     HdBprim* CreateFallbackBprim(TfToken const& typeId) override;
 
-    void DestroyBprim(HdBprim* bprim) override;
+    void DestroyBprim(HdBprim* bPrim) override;
 
     void CommitResources(HdChangeTracker* tracker) override;
 
 private:
     std::shared_ptr<filament::Engine> m_engine{};
-    TfTokenVector m_rprimTypes{};
-    TfTokenVector m_sprimTypes{};
-    TfTokenVector m_bprimTypes{};
+    TfTokenVector m_rPrimTypes{};
+    TfTokenVector m_sPrimTypes{};
+    TfTokenVector m_bPrimTypes{};
     HdResourceRegistrySharedPtr m_recourcesRegistry{};
 };
 
