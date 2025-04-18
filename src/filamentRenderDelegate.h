@@ -12,7 +12,7 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-class FilamentRenderDelegate : public HdRenderDelegate {
+class FilamentRenderDelegate final : public HdRenderDelegate {
 public:
     /**
      * delete ptr is not healty way to deallocate Filament eng.
@@ -34,7 +34,7 @@ public:
         m_bprimTypes.push_back(HdPrimTypeTokens->renderBuffer);
     } // end of FilamentRenderDelegate
 
-    ~FilamentRenderDelegate()  = default;
+    ~FilamentRenderDelegate() = default;
 
     const TfTokenVector& GetSupportedRprimTypes() const override;
     const TfTokenVector& GetSupportedSprimTypes() const override;

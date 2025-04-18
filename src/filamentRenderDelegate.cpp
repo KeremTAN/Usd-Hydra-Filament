@@ -1,8 +1,5 @@
 #include "filamentRenderDelegate.h"
 
-
-
-
 PXR_NAMESPACE_OPEN_SCOPE
 
 const TfTokenVector& FilamentRenderDelegate::GetSupportedRprimTypes() const {
