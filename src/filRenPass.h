@@ -1,3 +1,5 @@
+#pragma once
+
 #include <pxr/imaging/hd/renderPass.h>
 
 PXR_NAMESPACE_OPEN_SCOPE

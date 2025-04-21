@@ -1,4 +1,5 @@
 #pragma once
+
 #include <pxr/pxr.h>
 #include <pxr/imaging/hd/rendererPlugin.h>
 #include <pxr/imaging/hd/rendererPluginRegistry.h>
