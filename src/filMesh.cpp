@@ -18,7 +18,7 @@ HdDirtyBits FilMesh::GetInitialDirtyBitsMask() const {
     return mask;
 }
 
-// 
+// TODO: I suppose that need to implement renderParam class to continue
 void FilMesh::Sync(HdSceneDelegate* delegate, HdRenderParam* renderParam, 
             HdDirtyBits* dirtyBits, TfToken const& reprToken) {
     

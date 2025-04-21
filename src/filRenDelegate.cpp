@@ -1,5 +1,6 @@
 #include "filRenDelegate.h"
 #include "filRenPass.h"
+#include "filMesh.h"
 
 PXR_NAMESPACE_OPEN_SCOPE
 
@@ -33,7 +34,12 @@ void FilRenDelegate::DestroyInstancer(HdInstancer* instancer) {
 }
     
 HdRprim* FilRenDelegate::CreateRprim(TfToken const& typeId, SdfPath const& rprimId) { 
-
+    if (typeId == HdPrimTypeTokens->mesh) {
+        return new FilMesh(rprimId);
+    } else {
+        TF_CODING_ERROR("[ X ] Unsupported prim type: %s", typeId.GetText());
+        return nullptr;
+    }
 }
     
 void FilRenDelegate::DestroyRprim(HdRprim* rPrim) { 
