@@ -10,8 +10,6 @@ public:
 
     void Sync(HdSceneDelegate* delegate, HdRenderParam* renderParam,
                 HdDirtyBits* dirtyBits, TfToken const& reprToken) override;
-    
-    TfTokenVector const& GetBuiltinPrimvarNames() const override;
 
     HdDirtyBits _PropagateDirtyBits(HdDirtyBits bits) const override;
 
