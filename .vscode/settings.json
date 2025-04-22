@@ -78,6 +78,11 @@
         "string_view": "cpp",
         "typeindex": "cpp",
         "unordered_set": "cpp",
-        "variant": "cpp"
+        "variant": "cpp",
+        "thread": "cpp",
+        "chrono": "cpp",
+        "system_error": "cpp",
+        "format": "cpp",
+        "ostream": "cpp"
     }
 }

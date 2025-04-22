@@ -25,24 +25,28 @@ public:
             [](filament::Engine* e) { 
                 filament::Engine::destroy(&e);
             }
-        ) // end of m_engine 
+        ), // end of m_engine
+        m_renderer(
+            m_engine->createRenderer(),
+            [this](filament::Renderer* r){
+                m_engine.get()->destroy(r);
+            }
+        ), // end of m_renderer
+        m_scene(
+            m_engine->createScene(),
+            [this](filament::Scene* s){
+                m_engine.get()->destroy(s);
+            }
+        ) // end of m_scene & init list
     {
-        m_renderer  = m_engine->createRenderer();
-
-        m_scene     = m_engine->createScene();
-
         m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
         m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
         m_sPrimTypes.push_back(HdPrimTypeTokens->material);
         m_sPrimTypes.push_back(HdPrimTypeTokens->light);
         m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
-    } // end of FilRenDelegate
+    } // end of FilRenDelegate Ctor
 
-    ~FilRenDelegate() {
-        m_engine->destroy(m_renderer);
-        m_engine->destroy(m_scene);
-
-    };
+    ~FilRenDelegate() = default;
 
     const TfTokenVector& GetSupportedRprimTypes() const override;
     const TfTokenVector& GetSupportedSprimTypes() const override;
@@ -76,8 +80,8 @@ public:
 
 private:
     std::shared_ptr<filament::Engine>   m_engine{};
-    filament::Renderer* m_renderer{};
-    filament::Scene*    m_scene{};
+    std::shared_ptr<filament::Renderer> m_renderer{};
+    std::shared_ptr<filament::Scene>    m_scene{};
 
     TfTokenVector m_rPrimTypes{};
     TfTokenVector m_sPrimTypes{};
