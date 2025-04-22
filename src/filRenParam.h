@@ -17,19 +17,19 @@ class FilRenParam final : public HdRenderParam {
 
     ~FilRenParam() = default;
    
-    const filament::Engine* const GetEngine() const {
+    filament::Engine* GetEngine() const {
         return m_engine;
     }
 
-    const filament::Renderer* const GetRenderer() const {
+    filament::Renderer* GetRenderer() const {
         return m_renderer;
     }
 
-    const filament::Scene* const GetScene() const {
+    filament::Scene* GetScene() const {
         return m_scene;
     }
 
-    const filament::SwapChain* const GetSwapChain() const {
+    filament::SwapChain* GetSwapChain() const {
         return m_swapChain;
     }
 
