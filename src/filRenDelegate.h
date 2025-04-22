@@ -1,3 +1,5 @@
+#pragma once
+
 #include <pxr/pxr.h>
 #include <pxr/imaging/hd/tokens.h>
 #include <pxr/imaging/hd/extComputation.h>
@@ -25,6 +27,10 @@ public:
             }
         ) // end of m_engine 
     {
+        m_renderer  = m_engine->createRenderer();
+
+        m_scene     = m_engine->createScene();
+
         m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
         m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
         m_sPrimTypes.push_back(HdPrimTypeTokens->material);
@@ -32,7 +38,11 @@ public:
         m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
     } // end of FilRenDelegate
 
-    ~FilRenDelegate() = default;
+    ~FilRenDelegate() {
+        m_engine->destroy(m_renderer);
+        m_engine->destroy(m_scene);
+
+    };
 
     const TfTokenVector& GetSupportedRprimTypes() const override;
     const TfTokenVector& GetSupportedSprimTypes() const override;
@@ -65,7 +75,10 @@ public:
     void CommitResources(HdChangeTracker* tracker) override;
 
 private:
-    std::shared_ptr<filament::Engine> m_engine{};
+    std::shared_ptr<filament::Engine>   m_engine{};
+    filament::Renderer* m_renderer{};
+    filament::Scene*    m_scene{};
+
     TfTokenVector m_rPrimTypes{};
     TfTokenVector m_sPrimTypes{};
     TfTokenVector m_bPrimTypes{};
