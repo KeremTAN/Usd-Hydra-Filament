@@ -37,7 +37,8 @@ public:
             [this](filament::Scene* s){
                 m_engine.get()->destroy(s);
             }
-        ) // end of m_scene & init list
+        ), // end of m_scene
+        m_renderParam(std::make_shared<FilRenParam>(m_engine.get(),m_renderer.get(), m_scene.get()))
     {
         m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
         m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
@@ -46,7 +47,12 @@ public:
         m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
     } // end of FilRenDelegate Ctor
 
-    ~FilRenDelegate() = default;
+    ~FilRenDelegate() {
+        m_renderParam.reset();
+        m_scene.reset();
+        m_renderer.reset();
+        m_engine.reset();
+    };
 
     const TfTokenVector& GetSupportedRprimTypes() const override;
     const TfTokenVector& GetSupportedSprimTypes() const override;
