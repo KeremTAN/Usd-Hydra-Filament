@@ -38,7 +38,12 @@ public:
                 m_engine.get()->destroy(s);
             }
         ), // end of m_scene
-        m_renderParam(std::make_shared<FilRenParam>(m_engine.get(),m_renderer.get(), m_scene.get()))
+        m_swapChain(m_engine->createSwapChain(nullptr), // native window pointer
+            [this](filament::SwapChain* sc){
+                m_engine.get()->destroy(sc);
+            }
+        ),
+        m_renderParam(std::make_shared<FilRenParam>(m_engine.get(),m_renderer.get(), m_scene.get(), m_swapChain.get()))
     {
         m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
         m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
@@ -90,6 +95,7 @@ private:
     std::shared_ptr<filament::Engine>   m_engine{};
     std::shared_ptr<filament::Renderer> m_renderer{};
     std::shared_ptr<filament::Scene>    m_scene{};
+    std::shared_ptr<filament::SwapChain> m_swapChain{};
     
     TfTokenVector                       m_rPrimTypes{};
     TfTokenVector                       m_sPrimTypes{};
