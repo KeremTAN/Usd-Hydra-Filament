@@ -16,6 +16,11 @@ const TfTokenVector& FilRenDelegate::GetSupportedBprimTypes() const {
     return m_bPrimTypes;
 }
 
+HdRenderParam* FilRenDelegate::GetRenderParam() const {
+    return m_renderParam.get();
+}
+
+
 HdResourceRegistrySharedPtr FilRenDelegate::GetResourceRegistry() const {
     return m_recourcesRegistry;
 }

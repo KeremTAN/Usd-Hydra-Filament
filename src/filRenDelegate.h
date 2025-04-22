@@ -11,6 +11,8 @@
 #include <filament/Renderer.h>
 #include <filament/Scene.h>
 
+#include "filRenParam.h"
+
 PXR_NAMESPACE_OPEN_SCOPE
 
 class FilRenDelegate final : public HdRenderDelegate {
@@ -26,14 +28,12 @@ public:
                 filament::Engine::destroy(&e);
             }
         ), // end of m_engine
-        m_renderer(
-            m_engine->createRenderer(),
+        m_renderer(m_engine->createRenderer(),
             [this](filament::Renderer* r){
                 m_engine.get()->destroy(r);
             }
         ), // end of m_renderer
-        m_scene(
-            m_engine->createScene(),
+        m_scene(m_engine->createScene(),
             [this](filament::Scene* s){
                 m_engine.get()->destroy(s);
             }
@@ -51,6 +51,8 @@ public:
     const TfTokenVector& GetSupportedRprimTypes() const override;
     const TfTokenVector& GetSupportedSprimTypes() const override;
     const TfTokenVector& GetSupportedBprimTypes() const override;
+
+    HdRenderParam* GetRenderParam() const override;
 
     HdResourceRegistrySharedPtr GetResourceRegistry() const override;
 
@@ -82,11 +84,12 @@ private:
     std::shared_ptr<filament::Engine>   m_engine{};
     std::shared_ptr<filament::Renderer> m_renderer{};
     std::shared_ptr<filament::Scene>    m_scene{};
-
-    TfTokenVector m_rPrimTypes{};
-    TfTokenVector m_sPrimTypes{};
-    TfTokenVector m_bPrimTypes{};
-    HdResourceRegistrySharedPtr m_recourcesRegistry{};
+    
+    TfTokenVector                       m_rPrimTypes{};
+    TfTokenVector                       m_sPrimTypes{};
+    TfTokenVector                       m_bPrimTypes{};
+    std::shared_ptr<FilRenParam>        m_renderParam{};
+    HdResourceRegistrySharedPtr         m_recourcesRegistry{};
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE
