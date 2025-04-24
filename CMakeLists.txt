@@ -3,6 +3,8 @@ cmake_minimum_required(VERSION 3.27)
 # set(CMAKE_C_COMPILER "/opt/homebrew/opt/llvm@19/bin/clang")
 # set(CMAKE_CXX_COMPILER "/opt/homebrew/opt/llvm@19/bin/clang++")
 
+set(CMAKE_BUILD_TYPE Debug)
+
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -10,18 +12,23 @@ project(HdTutorial)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-find_package(pxr REQUIRED COMPONENTS hd)
-
+# TODO: It finds release in every scenario and processes it with release.
+# Solve this in the next stages.
 if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    set(FILAMENT_ROOT "third_party/filament/debug/filament/")
+    set(USD_ROOT "${CMAKE_SOURCE_DIR}/third_party/usd/debug/")
+    set(FILAMENT_ROOT "${CMAKE_SOURCE_DIR}/third_party/filament/debug/filament/")
 elseif(CMAKE_BUILD_TYPE STREQUAL "Release")
-    set(FILAMENT_ROOT "third_party/filament/release/filament/")
+    set(USD_ROOT "${CMAKE_SOURCE_DIR}/third_party/usd/release/")
+    set(FILAMENT_ROOT "${CMAKE_SOURCE_DIR}/third_party/filament/release/filament/")
 endif()
 
 file(GLOB FILAMENT_LIBS "${FILAMENT_ROOT}/lib/universal/*.a" "${FILAMENT_ROOT}/lib/universal/*.dylib")
 
 file(GLOB headers "${CMAKE_SOURCE_DIR}/headers/*.h")
 file(GLOB sources "${CMAKE_SOURCE_DIR}/src/*.cpp")
+
+find_package(pxr REQUIRED CONFIG PATHS "${USD_ROOT}")
+message(STATUS "Found USD at: ${USD_ROOT}")
 
 
 add_library(HdTutorial SHARED
