@@ -35,13 +35,16 @@ ${headers}
 ${FILAMENT_ROOT}/include
 )
 
-target_link_libraries(HdTutorial PRIVATE
+target_link_libraries(HdTutorial PUBLIC
 hd
 ${FILAMENT_LIBS}
 "-framework Metal"
 "-framework Cocoa"
 "-framework CoreVideo" 
 )
+
+add_executable(testHD ${CMAKE_SOURCE_DIR}/test/testMain.cpp)
+target_link_libraries(testHD PRIVATE HdTutorial usdGeom)
 
 
 set_target_properties(HdTutorial PROPERTIES INSTALL_RPATH "@loader_path")

@@ -8,7 +8,7 @@
             "name": "Debug",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/my_program",
+            "program": "${workspaceFolder}/build/testHD",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
