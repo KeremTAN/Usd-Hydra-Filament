@@ -4,17 +4,36 @@
 #include <pxr/usd/usdGeom/sphere.h>
 #include <pxr/imaging/hd/engine.h>
 #include <pxr/imaging/hd/tokens.h>
+#include <pxr/imaging/hd/renderPass.h>
+#include <pxr/imaging/hd/rprimCollection.h>
+#include <pxr/imaging/hd/driver.h>
+#include <pxr/imaging/hd/task.h>
+
+#include "../src/filRenDelegate.h"
 
 PXR_NAMESPACE_USING_DIRECTIVE
 
 int main(int argc, char** argv) {
-    UsdStageRefPtr stage = UsdStage::CreateNew("test_sphere.usda");
+    FilRenDelegate* delegate = new FilRenDelegate();
+    
+    HdDriverVector drivers;
+    
+    HdRenderIndex* renderIndex = HdRenderIndex::New(
+        delegate,
+        drivers,
+        "MyRenderInstance",
+        "TestApplication"
+    );
 
+    std::cout << "RenderIndex created successfully!\n";
+    
+    UsdStageRefPtr stage = UsdStage::CreateNew("test_sphere.usda");
     UsdGeomSphere sphere = UsdGeomSphere::Define(stage, SdfPath("/TestSphere"));
     sphere.GetRadiusAttr().Set(2.0);
-
     stage->Save();
     std::cout << "Test Sphere is created\n";
+    
 
+    delete renderIndex;
     return 0;
 }
