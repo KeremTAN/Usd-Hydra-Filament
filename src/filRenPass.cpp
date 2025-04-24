@@ -10,14 +10,21 @@
 
 #include "filRenPass.h"
 #include "filRenParam.h"
+#include <iostream>
 
 PXR_NAMESPACE_OPEN_SCOPE
 
 void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfTokenVector const& renderTags) {
 
+    std::cout << "[ PASS ] _Execute is working...\n";
+
+    // std::cout << "Execute called for render pass, primitive count: " << GetRprimIDs().size() << std::endl;
+
     FilRenParam* renderParam = static_cast<FilRenParam*>(GetRenderIndex()->GetRenderDelegate()->GetRenderParam());
+
     if (!renderParam) {
         TF_CODING_ERROR("Failed to get FilRenParam");
+        std::cout << "[ PASS X ] Failed to get FilRenParam\n";
         return;
     }
 
@@ -28,6 +35,7 @@ void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfT
 
     if (!engine || !renderer || !scene || !swapChain) {
         TF_CODING_ERROR("Missing Filament components");
+        std::cout << "[ PASS X ] Missing Filament components\n";
         return;
     }
 
@@ -54,6 +62,8 @@ void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfT
         
         renderer->endFrame();
     }
+
+    std::cout << "[ PASS √ ]\n";
 }
 
 PXR_NAMESPACE_CLOSE_SCOPE

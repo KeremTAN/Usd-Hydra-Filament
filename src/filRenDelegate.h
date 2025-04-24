@@ -12,6 +12,7 @@
 #include <filament/Scene.h>
 
 #include "filRenParam.h"
+#include <iostream>
 
 PXR_NAMESPACE_OPEN_SCOPE
 
@@ -45,11 +46,19 @@ public:
         ),
         m_renderParam(std::make_shared<FilRenParam>(m_engine.get(),m_renderer.get(), m_scene.get(), m_swapChain.get()))
     {
+        std::cout << "[ Delegate Ctor ] Filament RenderDelegate initializing...\n";
+
+        if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get()) {
+            std::cerr << "[ ERROR ]: Failed to create Filament engine..!\n";
+        }
+
         m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
         m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
         m_sPrimTypes.push_back(HdPrimTypeTokens->material);
         m_sPrimTypes.push_back(HdPrimTypeTokens->light);
         m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
+
+        std::cout << "[ Delegate Ctor √ ] Filament Engine created successfully\n";
     } // end of FilRenDelegate Ctor
 
     ~FilRenDelegate() {

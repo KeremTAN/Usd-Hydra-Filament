@@ -26,7 +26,9 @@ HdResourceRegistrySharedPtr FilRenDelegate::GetResourceRegistry() const {
 }
 
 HdRenderPassSharedPtr FilRenDelegate::CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) { 
+    std::cout << "[ CreateRenderPass ] Called \n";
     return HdRenderPassSharedPtr(new FilRenPass(index, collection));
+    std::cout << "[ CreateRenderPass √ ]\n";
 }
 
 HdInstancer* FilRenDelegate::CreateInstancer(HdSceneDelegate* delegate, SdfPath const& instancerId) { }
@@ -38,13 +40,17 @@ void FilRenDelegate::DestroyInstancer(HdInstancer* instancer) {
     }
 }
     
-HdRprim* FilRenDelegate::CreateRprim(TfToken const& typeId, SdfPath const& rprimId) { 
+HdRprim* FilRenDelegate::CreateRprim(TfToken const& typeId, SdfPath const& rprimId) {
+    std::cout << "[ CreateRprim ] Called \n";
+
     if (typeId == HdPrimTypeTokens->mesh) {
         return new FilMesh(rprimId);
     } else {
-        TF_CODING_ERROR("[ X ] Unsupported prim type: %s", typeId.GetText());
+        TF_CODING_ERROR("[ CreateRprim X ] Unsupported prim type: %s", typeId.GetText());
+        std::cout << "[ CreateRprim X ] Unsupported prim type: " << typeId.GetText() <<'\n';
         return nullptr;
     }
+    std::cout << "[ CreateRprim √ ]\n";
 }
     
 void FilRenDelegate::DestroyRprim(HdRprim* rPrim) { 
