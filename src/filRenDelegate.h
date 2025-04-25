@@ -24,24 +24,24 @@ public:
      */
     FilRenDelegate() :
         m_recourcesRegistry(std::make_shared<HdResourceRegistry>()),
-        m_engine(filament::Engine::create(),
+        m_engine(filament::Engine::create(filament::Engine::Backend::METAL),
             [](filament::Engine* e) { 
                 filament::Engine::destroy(&e);
             }
         ), // end of m_engine
         m_renderer(m_engine->createRenderer(),
-            [this](filament::Renderer* r){
-                m_engine.get()->destroy(r);
+            [eng = m_engine.get()](filament::Renderer* r){
+                eng->destroy(r);
             }
         ), // end of m_renderer
         m_scene(m_engine->createScene(),
-            [this](filament::Scene* s){
-                m_engine.get()->destroy(s);
+            [eng = m_engine.get()](filament::Scene* s){
+                eng->destroy(s);
             }
         ), // end of m_scene
         m_swapChain(m_engine->createSwapChain(nullptr), // native window pointer
-            [this](filament::SwapChain* sc){
-                m_engine.get()->destroy(sc);
+            [eng = m_engine.get()](filament::SwapChain* sc){
+                eng->destroy(sc);
             }
         ),
         m_renderParam(std::make_shared<FilRenParam>(m_engine.get(),m_renderer.get(), m_scene.get(), m_swapChain.get()))
@@ -101,9 +101,9 @@ public:
     void CommitResources(HdChangeTracker* tracker) override;
 
 private:
-    std::shared_ptr<filament::Engine>   m_engine{};
-    std::shared_ptr<filament::Renderer> m_renderer{};
-    std::shared_ptr<filament::Scene>    m_scene{};
+    std::shared_ptr<filament::Engine>    m_engine{};
+    std::shared_ptr<filament::Renderer>  m_renderer{};
+    std::shared_ptr<filament::Scene>     m_scene{};
     std::shared_ptr<filament::SwapChain> m_swapChain{};
     
     TfTokenVector                       m_rPrimTypes{};

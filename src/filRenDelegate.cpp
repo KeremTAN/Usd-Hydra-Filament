@@ -26,12 +26,14 @@ HdResourceRegistrySharedPtr FilRenDelegate::GetResourceRegistry() const {
 }
 
 HdRenderPassSharedPtr FilRenDelegate::CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) { 
-    std::cout << "[ CreateRenderPass ] Called \n";
+    std::cout << "[ CreateRenderPass √ ] Called \n";
     return HdRenderPassSharedPtr(new FilRenPass(index, collection));
-    std::cout << "[ CreateRenderPass √ ]\n";
 }
 
-HdInstancer* FilRenDelegate::CreateInstancer(HdSceneDelegate* delegate, SdfPath const& instancerId) { }
+//TODO: implement HdInstancer in the next steps
+HdInstancer* FilRenDelegate::CreateInstancer(HdSceneDelegate* delegate, SdfPath const& instancerId) { 
+    return nullptr;
+}
 
 void FilRenDelegate::DestroyInstancer(HdInstancer* instancer) {
     if(instancer){
@@ -41,7 +43,7 @@ void FilRenDelegate::DestroyInstancer(HdInstancer* instancer) {
 }
     
 HdRprim* FilRenDelegate::CreateRprim(TfToken const& typeId, SdfPath const& rprimId) {
-    std::cout << "[ CreateRprim ] Called \n";
+    std::cout << "[ CreateRprim √ ] Called \n";
 
     if (typeId == HdPrimTypeTokens->mesh) {
         return new FilMesh(rprimId);
@@ -50,9 +52,9 @@ HdRprim* FilRenDelegate::CreateRprim(TfToken const& typeId, SdfPath const& rprim
         std::cout << "[ CreateRprim X ] Unsupported prim type: " << typeId.GetText() <<'\n';
         return nullptr;
     }
-    std::cout << "[ CreateRprim √ ]\n";
 }
-    
+
+//TODO: what happend if rPrim, sPrim, bPrim has a garbage value. 
 void FilRenDelegate::DestroyRprim(HdRprim* rPrim) { 
     if(rPrim){
         delete rPrim;
@@ -61,10 +63,12 @@ void FilRenDelegate::DestroyRprim(HdRprim* rPrim) {
 }
     
 HdSprim* FilRenDelegate::CreateSprim(TfToken const& typeId, SdfPath const& sprimId) { 
-
+    return nullptr;
 }
 
-HdSprim* FilRenDelegate::CreateFallbackSprim(TfToken const& typeId) { }
+HdSprim* FilRenDelegate::CreateFallbackSprim(TfToken const& typeId) {
+    return nullptr;
+}
 
 void FilRenDelegate::DestroySprim(HdSprim* sPrim) {
     if(sPrim){
