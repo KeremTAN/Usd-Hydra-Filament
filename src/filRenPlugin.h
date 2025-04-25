@@ -7,14 +7,14 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-class FilRenPlugin final : public HdRendererPlugin {
+class __attribute__((visibility("default"))) FilRenPlugin final : public HdRendererPlugin {
 public:
     
-    FilRenPlugin()  = default;
-    ~FilRenPlugin()  = default;
+    FilRenPlugin();
+    ~FilRenPlugin() override;
        
     HdRenderDelegate* CreateRenderDelegate() override;
-    // virtual HdRenderDelegate* CreateRenderDelegate(const HdRenderSettingsMap& settingsMap) override;
+    HdRenderDelegate* CreateRenderDelegate(const HdRenderSettingsMap& settingsMap) override;
     void DeleteRenderDelegate(HdRenderDelegate *renderDelegate) override;
     bool IsSupported(bool gpuEnabled = true) const override;
 };

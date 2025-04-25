@@ -7,29 +7,38 @@ TF_REGISTRY_FUNCTION(TfType) {
     HdRendererPluginRegistry::Define<FilRenPlugin>();
 }
 
+FilRenPlugin::FilRenPlugin() = default;
+FilRenPlugin::~FilRenPlugin() = default;
+
 HdRenderDelegate* FilRenPlugin::CreateRenderDelegate() {
     return new FilRenDelegate();
 }
 
-// HdRenderDelegate* FilRenPlugin::CreateRenderDelegate(const HdRenderSettingsMap& settingsMap) {
-//     return new FilRenDelegate(settingsMap);
-// }
+HdRenderDelegate* FilRenPlugin::CreateRenderDelegate(const HdRenderSettingsMap& settingsMap) {
+    return new FilRenDelegate();
+}
 
 void FilRenPlugin::DeleteRenderDelegate(HdRenderDelegate* renderDelegate) {
     delete renderDelegate;
 }
 
-/**
- * TODO: it will be updated when FilRenDelegate::IsSupported() impl. figure out
- */
+// you can think that like private access modifier
+namespace {
+static bool isGpuSupported() {
+    using filament::Engine;
+    using B = Engine::Backend;
+    static const bool isSupported = []{
+        Engine* e = Engine::create(B::METAL);
+        if (!e) e = Engine::create(B::OPENGL);
+        if (e) Engine::destroy(&e);
+        return e != nullptr;
+    }();
+    return isSupported;
+}
+} // end of namespace
+
 bool FilRenPlugin::IsSupported(bool gpuEnabled) const {
-    const bool support = gpuEnabled /* && FilRenDelegate::IsSupported() */;
-    if (!support) {
-        TF_DEBUG(HD_RENDERER_PLUGIN).Msg(
-            "hdFilament renderer plugin unsupported: %s\n",
-            gpuEnabled ? "filament engine unsupported" : "no gpu");
-    }
-    return support;
+    return gpuEnabled && isGpuSupported();
 }
 
 PXR_NAMESPACE_CLOSE_SCOPE
