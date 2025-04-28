@@ -18,55 +18,8 @@ PXR_NAMESPACE_OPEN_SCOPE
 
 class FilRenDelegate final : public HdRenderDelegate {
 public:
-    /**
-     * delete ptr is not healty way to deallocate Filament eng.
-     * Therefore, custom deleter is defined while shared_ptr is used
-     */
-    FilRenDelegate() :
-        m_recourcesRegistry(std::make_shared<HdResourceRegistry>()),
-        m_engine(filament::Engine::create(filament::Engine::Backend::METAL),
-            [](filament::Engine* e) { 
-                filament::Engine::destroy(&e);
-            }
-        ), // end of m_engine
-        m_renderer(m_engine->createRenderer(),
-            [eng = m_engine.get()](filament::Renderer* r){
-                eng->destroy(r);
-            }
-        ), // end of m_renderer
-        m_scene(m_engine->createScene(),
-            [eng = m_engine.get()](filament::Scene* s){
-                eng->destroy(s);
-            }
-        ), // end of m_scene
-        m_swapChain(m_engine->createSwapChain(nullptr), // native window pointer
-            [eng = m_engine.get()](filament::SwapChain* sc){
-                eng->destroy(sc);
-            }
-        ),
-        m_renderParam(std::make_shared<FilRenParam>(m_engine.get(),m_renderer.get(), m_scene.get(), m_swapChain.get()))
-    {
-        std::cout << "[ Delegate Ctor ] Filament RenderDelegate initializing...\n";
-
-        if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get()) {
-            std::cerr << "[ ERROR ]: Failed to create Filament engine..!\n";
-        }
-
-        m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
-        m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
-        m_sPrimTypes.push_back(HdPrimTypeTokens->material);
-        m_sPrimTypes.push_back(HdPrimTypeTokens->light);
-        m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
-
-        std::cout << "[ Delegate Ctor √ ] Filament Engine created successfully\n";
-    } // end of FilRenDelegate Ctor
-
-    ~FilRenDelegate() {
-        m_renderParam.reset();
-        m_scene.reset();
-        m_renderer.reset();
-        m_engine.reset();
-    };
+    FilRenDelegate();
+    ~FilRenDelegate() override;
 
     const TfTokenVector& GetSupportedRprimTypes() const override;
     const TfTokenVector& GetSupportedSprimTypes() const override;
@@ -106,11 +59,12 @@ private:
     std::shared_ptr<filament::Scene>     m_scene{};
     std::shared_ptr<filament::SwapChain> m_swapChain{};
     
+    //TODO: check, does location of primTypes at stack on memory is fine or should they moved to static area
     TfTokenVector                       m_rPrimTypes{};
     TfTokenVector                       m_sPrimTypes{};
     TfTokenVector                       m_bPrimTypes{};
     std::shared_ptr<FilRenParam>        m_renderParam{};
-    HdResourceRegistrySharedPtr         m_recourcesRegistry{};
+    HdResourceRegistrySharedPtr         m_resourcesRegistry{};
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE

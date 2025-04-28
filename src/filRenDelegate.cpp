@@ -4,6 +4,55 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
+/**
+ * delete ptr is not healty way to deallocate Filament eng.
+ * Therefore, custom deleter is defined while shared_ptr is used
+ * TODO: if m_engine, m_renderer, etc. can not created, it tries to destroy garbage address. 
+ * FIX: above problem
+ */
+FilRenDelegate::FilRenDelegate() :
+    m_resourcesRegistry(std::make_shared<HdResourceRegistry>()),
+    m_engine(filament::Engine::create(filament::Engine::Backend::METAL),
+        [](filament::Engine* e) noexcept { 
+            filament::Engine::destroy(&e);
+        }
+    ), // end of m_engine
+    m_renderer(m_engine->createRenderer(),
+        [eng = m_engine.get()](filament::Renderer* r) noexcept {
+            eng->destroy(r);
+        }
+    ), // end of m_renderer
+    m_scene(m_engine->createScene(),
+        [eng = m_engine.get()](filament::Scene* s) noexcept {
+            eng->destroy(s);
+        }
+    ), // end of m_scene
+    m_swapChain(m_engine->createSwapChain(nullptr), // native window pointer
+        [eng = m_engine.get()](filament::SwapChain* sc) noexcept {
+            eng->destroy(sc);
+        }
+    ),
+    m_renderParam(std::make_shared<FilRenParam>(m_engine.get(),m_renderer.get(), m_scene.get(), m_swapChain.get()))
+{
+    std::cout << "[ Delegate Ctor ] Filament RenderDelegate initializing...\n";
+    if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get()) {
+        std::cerr << "[ ERROR ]: Failed to create Filament engine..!\n";
+    }
+    m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
+    m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
+    m_sPrimTypes.push_back(HdPrimTypeTokens->material);
+    m_sPrimTypes.push_back(HdPrimTypeTokens->light);
+    m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
+    std::cout << "[ Delegate Ctor √ ] Filament Engine created successfully\n";
+} // end of FilRenDelegate Ctor
+
+FilRenDelegate::~FilRenDelegate() {
+    m_renderParam.reset();
+    m_scene.reset();
+    m_renderer.reset();
+    m_engine.reset();
+};
+
 const TfTokenVector& FilRenDelegate::GetSupportedRprimTypes() const {
     return m_rPrimTypes;
 }
@@ -22,7 +71,7 @@ HdRenderParam* FilRenDelegate::GetRenderParam() const {
 
 
 HdResourceRegistrySharedPtr FilRenDelegate::GetResourceRegistry() const {
-    return m_recourcesRegistry;
+    return m_resourcesRegistry;
 }
 
 HdRenderPassSharedPtr FilRenDelegate::CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) { 
