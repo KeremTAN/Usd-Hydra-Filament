@@ -69,9 +69,12 @@ HdRenderParam* FilRenDelegate::GetRenderParam() const {
     return m_renderParam.get();
 }
 
-
 HdResourceRegistrySharedPtr FilRenDelegate::GetResourceRegistry() const {
     return m_resourcesRegistry;
+}
+
+HdRenderSettingDescriptorList FilRenDelegate::GetRenderSettingDescriptors() const {
+    return m_settingDescriptors;
 }
 
 HdRenderPassSharedPtr FilRenDelegate::CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) { 

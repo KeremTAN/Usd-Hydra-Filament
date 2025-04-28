@@ -29,6 +29,8 @@ public:
 
     HdResourceRegistrySharedPtr GetResourceRegistry() const override;
 
+    HdRenderSettingDescriptorList GetRenderSettingDescriptors() const override;
+
     HdRenderPassSharedPtr CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) override;
 
     HdInstancer* CreateInstancer(HdSceneDelegate* delegate, SdfPath const& instancerId) override;
@@ -59,12 +61,16 @@ private:
     std::shared_ptr<filament::Scene>     m_scene{};
     std::shared_ptr<filament::SwapChain> m_swapChain{};
     
-    //TODO: check, does location of primTypes at stack on memory is fine or should they moved to static area
+    /*TODO: 
+        * check, does location of primTypes at stack on memory is fine or should they moved to static area
+        * m_settingDescriptors updated
+    */
     TfTokenVector                       m_rPrimTypes{};
     TfTokenVector                       m_sPrimTypes{};
     TfTokenVector                       m_bPrimTypes{};
     std::shared_ptr<FilRenParam>        m_renderParam{};
     HdResourceRegistrySharedPtr         m_resourcesRegistry{};
+    HdRenderSettingDescriptorList       m_settingDescriptors{};
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE
