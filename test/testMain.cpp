@@ -16,7 +16,7 @@ PXR_NAMESPACE_USING_DIRECTIVE
 int main(int argc, char** argv) {
     FilRenDelegate* delegate = new FilRenDelegate();
     
-    HdDriverVector drivers;
+    HdDriverVector drivers{};
     
     HdRenderIndex* renderIndex = HdRenderIndex::New(
         delegate,
