@@ -60,7 +60,7 @@ FilRenDelegate::FilRenDelegate()
     }
 
     
-    if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get() || !m_view.get(), !m_camera.get()) {
+    if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get() || !m_view.get() || !m_camera.get()) {
         std::cerr << "[ X Delegate Ctor ]: There is a Missing Part of Filament engine..!\n";
         return;
     }
