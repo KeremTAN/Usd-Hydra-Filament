@@ -84,7 +84,7 @@ HdRenderSettingDescriptorList FilRenDelegate::GetRenderSettingDescriptors() cons
 
 HdRenderPassSharedPtr FilRenDelegate::CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) { 
     std::cout << "[ √ CreateRenderPass ] Called \n";
-    return std::make_shared<FilRenPass>(index, collection);
+    return std::make_shared<FilRenPass>(index, collection, m_renderParam.get());
 }
 
 //TODO: implement HdInstancer in the next steps

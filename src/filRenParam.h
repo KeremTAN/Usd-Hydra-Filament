@@ -5,6 +5,7 @@
 #include <pxr/imaging/hd/renderThread.h>
 
 #include <filament/Engine.h>
+#include <iostream>
 
 
 PXR_NAMESPACE_OPEN_SCOPE
