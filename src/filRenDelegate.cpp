@@ -1,6 +1,7 @@
 #include "filRenDelegate.h"
 #include "filRenPass.h"
 #include "filMesh.h"
+#include "filCamera.h"
 
 PXR_NAMESPACE_OPEN_SCOPE
 
@@ -17,37 +18,43 @@ FilRenDelegate::FilRenDelegate()
 {
     const auto& eng = m_engine.get();
 
-    m_renderer = std::shared_ptr<filament::Renderer>(
-        eng ? eng->createRenderer() : nullptr,
-        [eng](filament::Renderer* r) noexcept {
-            if (eng && r) eng->destroy(r);
-        });
-
-    m_scene = std::shared_ptr<filament::Scene>(
-        eng ? eng->createScene() : nullptr,
-        [eng](filament::Scene* s) noexcept {
-            if (eng && s) eng->destroy(s);
-        });
-
-    m_swapChain = std::shared_ptr<filament::SwapChain>(
-        eng ? eng->createSwapChain(nullptr) : nullptr,
-        [eng](filament::SwapChain* sc) noexcept {
-            if (eng && sc) eng->destroy(sc);
+    if(eng) {
+        m_renderer = std::shared_ptr<filament::Renderer>(eng->createRenderer(),
+            [eng](filament::Renderer* r) noexcept {
+                if (r) eng->destroy(r);
         });
     
-    m_view = std::shared_ptr<filament::View>(
-        eng ? eng->createView() : nullptr,
-        [eng](filament::View* v) noexcept {
-            if (eng && v) eng->destroy(v);
+        m_scene = std::shared_ptr<filament::Scene>(eng->createScene(),
+            [eng](filament::Scene* s) noexcept {
+                if (s) eng->destroy(s);
+        });
+    
+        m_swapChain = std::shared_ptr<filament::SwapChain>(eng->createSwapChain(nullptr),
+            [eng](filament::SwapChain* sc) noexcept {
+                if (sc) eng->destroy(sc);
+        });
+        
+        m_view = std::shared_ptr<filament::View>(eng->createView(),
+            [eng](filament::View* v) noexcept {
+                if (v) eng->destroy(v);
         });
 
-    m_renderParam = std::make_shared<FilRenParam>(
-        eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get());
-
-    std::cout << "[ √ Delegate Ctor ] Filament RenderDelegate initializing...\n";
-    if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get()) {
-        std::cerr << "[ X ERROR ]: Failed to create Filament engine..!\n";
+        m_renderParam = std::make_shared<FilRenParam>(
+            eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get());
+        
+        std::cout << "[ √ Delegate Ctor ] Filament RenderDelegate initializing...\n";
     }
+    else { // TODO: add a assert of hydra or std c++
+        std::cerr << "[ X Delegate Ctor ]: Empty Filament Engine...!\n";
+        return;
+    }
+
+    
+    if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get() || !m_view.get()) {
+        std::cerr << "[ X Delegate Ctor ]: There is a Missing Part of Filament engine..!\n";
+        return;
+    }
+    
     m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
     m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
     // m_sPrimTypes.push_back(HdPrimTypeTokens->material);
@@ -117,7 +124,16 @@ void FilRenDelegate::DestroyRprim(HdRprim* rPrim) {
 }
     
 HdSprim* FilRenDelegate::CreateSprim(TfToken const& typeId, SdfPath const& sprimId) { 
-    return nullptr;
+    std::cout << "[ √ CreateSprim ] Called \n";
+
+    if (typeId == HdPrimTypeTokens->camera) {
+        return new FilCamera(sprimId);
+    }
+    else {
+        TF_CODING_ERROR("[ X CreateSprim ] Unsupported prim type: %s", typeId.GetText());
+        std::cout << "[ X CreateSprim ] Unsupported prim type: " << typeId.GetText() <<'\n';
+        return nullptr;
+    }
 }
 
 HdSprim* FilRenDelegate::CreateFallbackSprim(TfToken const& typeId) {

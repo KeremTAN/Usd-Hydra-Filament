@@ -84,6 +84,7 @@
         "system_error": "cpp",
         "format": "cpp",
         "ostream": "cpp",
-        "*.ipp": "cpp"
+        "*.ipp": "cpp",
+        "hash_map": "cpp"
     }
 }
