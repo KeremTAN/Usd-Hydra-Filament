@@ -20,24 +20,34 @@ FilRenDelegate::FilRenDelegate()
 
     if(eng) {
         m_renderer = std::shared_ptr<filament::Renderer>(eng->createRenderer(),
-            [eng](filament::Renderer* r) noexcept {
-                if (r) eng->destroy(r);
+            [eng](filament::Renderer* renderer) noexcept {
+                if (renderer) eng->destroy(renderer);
         });
     
         m_scene = std::shared_ptr<filament::Scene>(eng->createScene(),
-            [eng](filament::Scene* s) noexcept {
-                if (s) eng->destroy(s);
+            [eng](filament::Scene* scene) noexcept {
+                if (scene) eng->destroy(scene);
         });
     
         m_swapChain = std::shared_ptr<filament::SwapChain>(eng->createSwapChain(nullptr),
-            [eng](filament::SwapChain* sc) noexcept {
-                if (sc) eng->destroy(sc);
+            [eng](filament::SwapChain* swapChain) noexcept {
+                if (swapChain) eng->destroy(swapChain);
         });
         
         m_view = std::shared_ptr<filament::View>(eng->createView(),
-            [eng](filament::View* v) noexcept {
-                if (v) eng->destroy(v);
+            [eng](filament::View* view) noexcept {
+                if (view) eng->destroy(view);
         });
+
+        m_cameraEntity = utils::EntityManager::get().create();
+        m_camera = std::shared_ptr<filament::Camera>(m_engine->createCamera(m_cameraEntity),
+            [eng = m_engine, ce = m_cameraEntity](filament::Camera* camera) noexcept {
+                if (camera) {
+                    eng->destroyCameraComponent(ce);
+                    utils::EntityManager::get().destroy(ce);
+                }
+            }
+        );
 
         m_renderParam = std::make_shared<FilRenParam>(
             eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get());

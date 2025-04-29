@@ -10,6 +10,9 @@
 #include <filament/Engine.h>
 #include <filament/Renderer.h>
 #include <filament/Scene.h>
+#include <filament/Camera.h>
+#include <utils/EntityManager.h>
+#include <utils/Entity.h>
 
 #include "filRenParam.h"
 #include <iostream>
@@ -61,6 +64,8 @@ private:
     std::shared_ptr<filament::Scene>     m_scene{};
     std::shared_ptr<filament::SwapChain> m_swapChain{};
     std::shared_ptr<filament::View>      m_view{};
+    std::shared_ptr<filament::Camera>    m_camera{};
+    utils::Entity                        m_cameraEntity{};
 
     /*TODO: 
         * check, does location of primTypes at stack on memory is fine or should they moved to static area
