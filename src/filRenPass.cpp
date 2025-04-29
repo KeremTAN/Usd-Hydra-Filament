@@ -18,52 +18,30 @@ void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfT
 
     std::cout << "[ PASS ] _Execute is working...\n";
 
-    // std::cout << "Execute called for render pass, primitive count: " << GetRprimIDs().size() << std::endl;
-
-    FilRenParam* renderParam = static_cast<FilRenParam*>(GetRenderIndex()->GetRenderDelegate()->GetRenderParam());
-
-    if (!renderParam) {
-        TF_CODING_ERROR("Failed to get FilRenParam");
-        std::cout << "[ PASS X ] Failed to get FilRenParam\n";
-        return;
-    }
-
-    filament::Engine*    engine    = const_cast<filament::Engine*>(renderParam->GetEngine());
-    filament::Renderer*  renderer  = const_cast<filament::Renderer*>(renderParam->GetRenderer());
-    filament::Scene*     scene     = const_cast<filament::Scene*>(renderParam->GetScene());
-    filament::SwapChain* swapChain = renderParam->GetSwapChain();
-
-    if (!engine || !renderer || !scene || !swapChain) {
-        TF_CODING_ERROR("Missing Filament components");
-        std::cout << "[ PASS X ] Missing Filament components\n";
-        return;
-    }
-
     // Base of render loop
-    if (renderer->beginFrame(swapChain)) {
+    if (m_renderer->beginFrame(m_swapChain)) {
         // TODO: in the future, take viewport directly 
         uint32_t width = 800;
         uint32_t height = 600;
         
         // Render hedefini temizleme
-        renderer->setClearOptions({
+        m_renderer->setClearOptions({
             .clearColor = {0.0f, 0.1f, 0.2f, 1.0f},
             .clear = true
         });
         
-        filament::View* view = engine->createView();
         filament::Viewport viewport(0, 0, width, height);
-        view->setViewport(viewport);
-        view->setScene(scene);
+        m_view->setViewport(viewport);
+        m_view->setScene(m_scene);
         
-        renderer->render(view);
+        m_renderer->render(m_view);
         
-        engine->destroy(view);
+        m_engine->destroy(m_view);
         
-        renderer->endFrame();
+        m_renderer->endFrame();
     }
 
-    std::cout << "[ PASS √ ]\n";
+    std::cout << "[ √ PASS ]\n";
 }
 
 PXR_NAMESPACE_CLOSE_SCOPE
