@@ -1,19 +1,17 @@
 #pragma once
 
-#include <pxr/pxr.h>
-#include <pxr/imaging/hd/renderDelegate.h>
-#include <pxr/imaging/hd/renderThread.h>
 
-#include <filament/Engine.h>
+#include <pxr/imaging/hd/renderDelegate.h>
 #include <iostream>
 
 
 PXR_NAMESPACE_OPEN_SCOPE
 class FilRenParam final : public HdRenderParam {
     public:
-    FilRenParam(filament::Engine* engine, filament::Renderer* renderer,
-                filament::Scene* scene, filament::SwapChain* swapChain, filament::View* view) :
-        m_engine(engine), m_renderer(renderer), m_scene(scene), m_swapChain(swapChain), m_view(view)
+    FilRenParam(filament::Engine* engine, filament::Renderer* renderer, filament::Scene* scene,
+        filament::SwapChain* swapChain, filament::View* view, filament::Camera* camera) :
+        m_engine(engine), m_renderer(renderer), m_scene(scene),
+        m_swapChain(swapChain), m_view(view), m_camera(camera)
     {
         std::cout << "[ √ FilRenParam is created ]" << '\n';
     }
@@ -40,12 +38,17 @@ class FilRenParam final : public HdRenderParam {
         return m_view;
     }
 
+    filament::Camera* GetCamera() const {
+        return m_camera;
+    }
+
 private:
     filament::Engine*    m_engine{};
     filament::Renderer*  m_renderer{};
     filament::Scene*     m_scene{};
     filament::SwapChain* m_swapChain{};
     filament::View*      m_view{};
+    filament::Camera*    m_camera{};
 
 };
 
