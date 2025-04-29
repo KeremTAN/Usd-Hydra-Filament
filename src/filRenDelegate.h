@@ -60,7 +60,8 @@ private:
     std::shared_ptr<filament::Renderer>  m_renderer{};
     std::shared_ptr<filament::Scene>     m_scene{};
     std::shared_ptr<filament::SwapChain> m_swapChain{};
-    
+    std::shared_ptr<filament::View>      m_view{};
+
     /*TODO: 
         * check, does location of primTypes at stack on memory is fine or should they moved to static area
         * m_settingDescriptors updated

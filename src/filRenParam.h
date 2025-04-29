@@ -11,9 +11,11 @@ PXR_NAMESPACE_OPEN_SCOPE
 class FilRenParam final : public HdRenderParam {
     public:
     FilRenParam(filament::Engine* engine, filament::Renderer* renderer,
-        filament::Scene* scene, filament::SwapChain* swapChain) :
-        m_engine(engine), m_renderer(renderer), m_scene(scene), m_swapChain(swapChain)
-    {}
+                filament::Scene* scene, filament::SwapChain* swapChain, filament::View* view) :
+        m_engine(engine), m_renderer(renderer), m_scene(scene), m_swapChain(swapChain), m_view(view)
+    {
+        std::cout << "[ √ FilRenParam is created ]" << '\n';
+    }
 
     ~FilRenParam() = default;
    
@@ -33,11 +35,17 @@ class FilRenParam final : public HdRenderParam {
         return m_swapChain;
     }
 
+    filament::View* GetView() const {
+        return m_view;
+    }
+
 private:
-    filament::Engine*   m_engine{};
-    filament::Renderer* m_renderer{};
-    filament::Scene*    m_scene{};
+    filament::Engine*    m_engine{};
+    filament::Renderer*  m_renderer{};
+    filament::Scene*     m_scene{};
     filament::SwapChain* m_swapChain{};
+    filament::View*      m_view{};
+
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE

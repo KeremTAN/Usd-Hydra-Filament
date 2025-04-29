@@ -34,20 +34,26 @@ FilRenDelegate::FilRenDelegate()
         [eng](filament::SwapChain* sc) noexcept {
             if (eng && sc) eng->destroy(sc);
         });
+    
+    m_view = std::shared_ptr<filament::View>(
+        eng ? eng->createView() : nullptr,
+        [eng](filament::View* v) noexcept {
+            if (eng && v) eng->destroy(v);
+        });
 
     m_renderParam = std::make_shared<FilRenParam>(
-        eng, m_renderer.get(), m_scene.get(), m_swapChain.get());
+        eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get());
 
-    std::cout << "[ Delegate Ctor ] Filament RenderDelegate initializing...\n";
+    std::cout << "[ √ Delegate Ctor ] Filament RenderDelegate initializing...\n";
     if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get()) {
-        std::cerr << "[ ERROR ]: Failed to create Filament engine..!\n";
+        std::cerr << "[ X ERROR ]: Failed to create Filament engine..!\n";
     }
     m_rPrimTypes.push_back(HdPrimTypeTokens->mesh);
     m_sPrimTypes.push_back(HdPrimTypeTokens->camera);
     // m_sPrimTypes.push_back(HdPrimTypeTokens->material);
     // m_sPrimTypes.push_back(HdPrimTypeTokens->light);
     // m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
-    std::cout << "[ Delegate Ctor √ ] Filament Engine created successfully\n";
+    std::cout << "[ √ Delegate Ctor ] Filament Engine created successfully\n";
 } // end of FilRenDelegate Ctor
 
 FilRenDelegate::~FilRenDelegate() = default;
@@ -77,7 +83,7 @@ HdRenderSettingDescriptorList FilRenDelegate::GetRenderSettingDescriptors() cons
 }
 
 HdRenderPassSharedPtr FilRenDelegate::CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) { 
-    std::cout << "[ CreateRenderPass √ ] Called \n";
+    std::cout << "[ √ CreateRenderPass ] Called \n";
     return std::make_shared<FilRenPass>(index, collection);
 }
 
@@ -94,14 +100,14 @@ void FilRenDelegate::DestroyInstancer(HdInstancer* instancer) {
 }
     
 HdRprim* FilRenDelegate::CreateRprim(TfToken const& typeId, SdfPath const& rprimId) {
-    std::cout << "[ CreateRprim √ ] Called \n";
+    std::cout << "[ √ CreateRprim ] Called \n";
 
     if (typeId == HdPrimTypeTokens->mesh) {
         return new FilMesh(rprimId);
     }
     else {
-        TF_CODING_ERROR("[ CreateRprim X ] Unsupported prim type: %s", typeId.GetText());
-        std::cout << "[ CreateRprim X ] Unsupported prim type: " << typeId.GetText() <<'\n';
+        TF_CODING_ERROR("[ X CreateRprim ] Unsupported prim type: %s", typeId.GetText());
+        std::cout << "[ X CreateRprim ] Unsupported prim type: " << typeId.GetText() <<'\n';
         return nullptr;
     }
 }
