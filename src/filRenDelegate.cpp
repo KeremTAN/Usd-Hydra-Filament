@@ -42,7 +42,7 @@ FilRenDelegate::FilRenDelegate()
         m_cameraEntity = utils::EntityManager::get().create();
         m_camera = std::shared_ptr<filament::Camera>(m_engine->createCamera(m_cameraEntity),
             [eng = m_engine, ce = m_cameraEntity](filament::Camera* camera) noexcept {
-                if (camera) {
+                if (camera && !ce.isNull()) {
                     eng->destroyCameraComponent(ce);
                     utils::EntityManager::get().destroy(ce);
                 }
