@@ -16,8 +16,9 @@ public:
         m_scene = param->GetScene();
         m_swapChain = param->GetSwapChain();
         m_view = param->GetView();
+        m_camera = param->GetCamera();
 
-        if (!m_engine || !m_renderer || !m_scene || !m_swapChain || !m_view) {
+        if (!m_engine || !m_renderer || !m_scene || !m_swapChain || !m_view  || !m_camera) {
             TF_CODING_ERROR("Missing Filament components");
             std::cout << "[ PASS X ] Missing Filament components\n";
             return;
@@ -27,12 +28,15 @@ public:
     ~FilRenPass() = default;
 
     void _Execute(HdRenderPassStateSharedPtr const& renderPassState, TfTokenVector const& renderTags) override;
+
+    filament::math::mat4 GfMatrixToFilament(GfMatrix4d const& m);
 private: 
     filament::Engine*    m_engine{};
     filament::Renderer*  m_renderer{};
     filament::Scene*     m_scene{};
     filament::SwapChain* m_swapChain{};
     filament::View*      m_view{};
+    filament::Camera*    m_camera{};
 };
 
 PXR_NAMESPACE_CLOSE_SCOPE
