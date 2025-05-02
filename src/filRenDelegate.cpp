@@ -6,16 +6,18 @@
 PXR_NAMESPACE_OPEN_SCOPE
 
 /**
+ * @brief
  * delete ptr is not healty way to deallocate Filament eng.
  * Therefore, custom deleter is defined while shared_ptr is used
  */
-FilRenDelegate::FilRenDelegate()
-    : m_resourcesRegistry(std::make_shared<HdResourceRegistry>())
-    , m_engine(
-          filament::Engine::create(filament::Engine::Backend::METAL),
-          [](filament::Engine* e) noexcept { 
-            filament::Engine::destroy(&e);})
+FilRenDelegate::FilRenDelegate() :
+    m_resourcesRegistry(std::make_shared<HdResourceRegistry>()),
+    m_engine(filament::Engine::create(filament::Engine::Backend::METAL),
+        [](filament::Engine* e) noexcept {
+            filament::Engine::destroy(&e); }) // end of lambda & m_engine
 {
+    std::cout << "[ o Delegate Ctor ] initializing...\n";
+
     const auto& eng = m_engine.get();
 
     if(eng) {
@@ -51,8 +53,6 @@ FilRenDelegate::FilRenDelegate()
 
         m_renderParam = std::make_shared<FilRenParam>(
             eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get(), m_camera.get());
-        
-        std::cout << "[ o Delegate Ctor ] initializing...\n";
     }
     else { // TODO: add a assert of hydra or std c++
         std::cerr << "[ X Delegate Ctor ] Empty Filament Engine...!\n";
