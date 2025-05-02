@@ -51,7 +51,7 @@ void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfT
         static_cast<uint32_t>(vp[3] + 0.5f)));
 
     // Kamerayı al
-    HdCamera const* hdCam { renderPassState->GetCamera() };
+    HdCamera const* hdCam { renderPassState->GetCamera() }; //TODO: hdCam type will be converted to FilCamera
     
     if (!hdCam) {
         std::cout << "[ X PASS _Execute ] No camera sprim\n";
@@ -68,9 +68,8 @@ void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfT
 
     // Kamera transformasyonu
     GfMatrix4d gfTransform { hdCam->GetTransform() };
-    filament::math::mat4 filTransform { GfMatrixToFilament(gfTransform) };
     filament::TransformManager& tcm = m_engine->getTransformManager();
-    tcm.setTransform(tcm.getInstance(m_camera->getEntity()), filTransform); //TODO: get instance may moved to ctor
+    tcm.setTransform(tcm.getInstance(m_camera->getEntity()), GfMatrixToFilament(gfTransform)); //TODO: get instance may moved to ctor
 
     // View'a kamerayı bağla
     m_view->setCamera(m_camera);
