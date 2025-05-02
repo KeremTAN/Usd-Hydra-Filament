@@ -41,18 +41,8 @@ FilRenDelegate::FilRenDelegate() :
                 if (view) eng->destroy(view);
         });
 
-        m_cameraEntity = utils::EntityManager::get().create();
-        m_camera = std::shared_ptr<filament::Camera>(m_engine->createCamera(m_cameraEntity),
-            [eng = m_engine, ce = m_cameraEntity](filament::Camera* camera) noexcept {
-                if (camera && !ce.isNull()) {
-                    eng->destroyCameraComponent(ce);
-                    utils::EntityManager::get().destroy(ce);
-                }
-            }
-        );
-
         m_renderParam = std::make_shared<FilRenParam>(
-            eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get(), m_camera.get());
+            eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get());
     }
     else { // TODO: add a assert of hydra or std c++
         std::cerr << "[ X Delegate Ctor ] Empty Filament Engine...!\n";
@@ -60,7 +50,7 @@ FilRenDelegate::FilRenDelegate() :
     }
 
     
-    if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get() || !m_view.get() || !m_camera.get()) {
+    if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get() || !m_view.get()) {
         std::cerr << "[ X Delegate Ctor ] There is a Missing Part of Filament engine..!\n";
         return;
     }

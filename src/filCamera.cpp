@@ -4,10 +4,30 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
-FilCamera::FilCamera(SdfPath const& id) : HdCamera(id) {}
+FilCamera::FilCamera(SdfPath const& id) : HdCamera(id) {
+  std::cout << "[ o Camera Ctor ] created successfully\n";
+}
 
 void FilCamera::Sync(HdSceneDelegate* sceneDelegate, HdRenderParam* renderParam, HdDirtyBits* dirtyBits) {
     HdCamera::Sync(sceneDelegate, renderParam, dirtyBits);
+
+    const auto filRenParam { static_cast<FilRenParam*>(renderParam) };
+
+    if(!m_camera.get()) {
+      auto engine = filRenParam->GetEngine();
+      m_cameraEntity = utils::EntityManager::get().create();
+      m_camera = std::shared_ptr<filament::Camera>(
+          engine->createCamera(m_cameraEntity),
+          [engine, ce = m_cameraEntity](filament::Camera* camera) noexcept {
+              if (camera && !ce.isNull()) {
+                  engine->destroyCameraComponent(ce);
+                  utils::EntityManager::get().destroy(ce);
+              }
+          }
+      );
+      
+      filRenParam->SetCamera(m_camera.get());
+    }
 
     const VtValue& fStop { sceneDelegate->GetCameraParamValue(GetId(), HdCameraTokens->fStop) };
 
