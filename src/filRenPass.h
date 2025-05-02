@@ -3,7 +3,7 @@
 #include <iostream>
 #include <pxr/imaging/hd/renderPass.h>
 #include "filRenParam.h"
-
+#include <math/mat4.h> // filament::math::mat4f
 
 PXR_NAMESPACE_OPEN_SCOPE
 
@@ -15,7 +15,7 @@ public:
 
     void _Execute(HdRenderPassStateSharedPtr const& renderPassState, TfTokenVector const& renderTags) override;
 
-    filament::math::mat4 GfMatrixToFilament(GfMatrix4d const& m);
+    filament::math::mat4 GfMatrixToFilament(GfMatrix4d const& matrix);
 private: 
     filament::Engine*    m_engine{};
     filament::Renderer*  m_renderer{};

@@ -9,7 +9,6 @@
 #include <filament/View.h>
 #include <filament/Camera.h>
 #include <filament/TransformManager.h>
-#include <math/mat4.h> // filament::math::mat4f
 
 
 #include "filRenPass.h"
