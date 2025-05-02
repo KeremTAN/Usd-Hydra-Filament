@@ -18,26 +18,46 @@
 
 PXR_NAMESPACE_OPEN_SCOPE
 
+FilRenPass::FilRenPass(HdRenderIndex* index, HdRprimCollection const& collection, FilRenParam* param) : 
+    HdRenderPass(index, collection) {
+    m_engine = param->GetEngine();
+    m_renderer = param->GetRenderer();
+    m_scene = param->GetScene();
+    m_swapChain = param->GetSwapChain();
+    m_view = param->GetView();
+    m_camera = param->GetCamera();
+
+    if (!m_engine || !m_renderer || !m_scene || !m_swapChain || !m_view  || !m_camera) {
+        TF_CODING_ERROR("Missing Filament components");
+        std::cout << "[ X PASS ] Missing Filament components\n";
+        return;
+    }
+}
+
 void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfTokenVector const& renderTags) {
 
-    std::cout << "[ PASS ] _Execute is working...\n";
+    if (!renderPassState) {
+        std::cout << "[ X PASS _Execute ] Invalid render pass state!\n";
+        return;
+    }
+
+    std::cout << "[ PASS _Execute ] is working...\n";
     // Viewport'u al ve Filament Viewport'a çevir
     const GfVec4f& vp = renderPassState->GetViewport();
     m_view->setViewport(filament::Viewport(vp[0], vp[1], vp[2], vp[3]));
 
     // Kamerayı al
-    HdCamera const* hdCam = renderPassState->GetCamera();
-    if (!hdCam) return;
-
+    HdCamera const* hdCam { renderPassState->GetCamera() };
+    
+    if (!hdCam) 
+        return;
 
     // Clipping range
-    GfRange1f clipRange = hdCam->GetClippingRange();
-    float near  = clipRange.GetMin();
-    float far   = clipRange.GetMax();
+    GfRange1f clipRange { hdCam->GetClippingRange() };
+    float near { clipRange.GetMin() };
+    float far  { clipRange.GetMax() };
 
-
-
-    GfMatrix4d gfProj = hdCam->ComputeProjectionMatrix();     // Projeksiyon matrisini hesapla TODO: transpoz gerekebilir
+    GfMatrix4d gfProj = hdCam->ComputeProjectionMatrix();
     m_camera->setCustomProjection(GfMatrixToFilament(gfProj), near, far);     // Projeksiyonu ve clipping'i ayarla
 
     // Kamera transformasyonu
@@ -49,11 +69,28 @@ void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfT
     // View'a kamerayı bağla
     m_view->setCamera(m_camera);
 
-    std::cout << "[ √ PASS ]\n";
+    std::cout << "[ √ PASS _Execute ]\n";
 }
 
-filament::math::mat4 FilRenPass::GfMatrixToFilament(GfMatrix4d const& m) { //TODO: matris dönüşümü doğru mu kontrol et
-    return filament::math::mat4(*reinterpret_cast<const filament::math::mat4::value_type*>(m.data()));
+/**
+ * @brief 
+ * matrix of GfMatrix4d is transformed into matrix filament::math::math4 by taking the TRANSPOSE!
+ * The reason for that is;
+ * GfMatrix4d uses row-major system
+ * filament::math::mat4 col-major system
+ * @param matrix
+ * @return filament::math::mat4
+ * TODO: for-loop may be optimized in future
+ */
+filament::math::mat4 FilRenPass::GfMatrixToFilament(GfMatrix4d const& matrix) {
+    filament::math::mat4 result{};
+    
+    for (int row{}; row < 4; ++row) {
+        for (int col{}; col < 4; ++col) {
+            result[col][row] = static_cast<filament::math::mat4::value_type>(matrix[row][col]);
+        }
+    }
+    return result;
 }
 
 PXR_NAMESPACE_CLOSE_SCOPE
