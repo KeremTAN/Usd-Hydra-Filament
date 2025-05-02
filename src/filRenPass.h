@@ -4,6 +4,7 @@
 #include <pxr/imaging/hd/renderPass.h>
 #include "filRenParam.h"
 
+
 PXR_NAMESPACE_OPEN_SCOPE
 
 class FilRenPass final : public HdRenderPass {
