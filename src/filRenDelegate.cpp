@@ -52,16 +52,16 @@ FilRenDelegate::FilRenDelegate()
         m_renderParam = std::make_shared<FilRenParam>(
             eng, m_renderer.get(), m_scene.get(), m_swapChain.get(), m_view.get(), m_camera.get());
         
-        std::cout << "[ √ Delegate Ctor ] Filament RenderDelegate initializing...\n";
+        std::cout << "[ o Delegate Ctor ] initializing...\n";
     }
     else { // TODO: add a assert of hydra or std c++
-        std::cerr << "[ X Delegate Ctor ]: Empty Filament Engine...!\n";
+        std::cerr << "[ X Delegate Ctor ] Empty Filament Engine...!\n";
         return;
     }
 
     
     if (!m_engine.get() || !m_renderer.get() || !m_scene.get() || !m_swapChain.get() || !m_view.get() || !m_camera.get()) {
-        std::cerr << "[ X Delegate Ctor ]: There is a Missing Part of Filament engine..!\n";
+        std::cerr << "[ X Delegate Ctor ] There is a Missing Part of Filament engine..!\n";
         return;
     }
     
@@ -70,7 +70,7 @@ FilRenDelegate::FilRenDelegate()
     // m_sPrimTypes.push_back(HdPrimTypeTokens->material);
     // m_sPrimTypes.push_back(HdPrimTypeTokens->light);
     // m_bPrimTypes.push_back(HdPrimTypeTokens->renderBuffer);
-    std::cout << "[ √ Delegate Ctor ] Filament Engine created successfully\n";
+    std::cout << "[ o Delegate Ctor ] created successfully\n";
 } // end of FilRenDelegate Ctor
 
 FilRenDelegate::~FilRenDelegate() = default;
@@ -100,7 +100,7 @@ HdRenderSettingDescriptorList FilRenDelegate::GetRenderSettingDescriptors() cons
 }
 
 HdRenderPassSharedPtr FilRenDelegate::CreateRenderPass(HdRenderIndex* index, HdRprimCollection const& collection) { 
-    std::cout << "[ √ CreateRenderPass ] Called \n";
+    std::cout << "[ o CreateRenderPass ] Called \n";
     return std::make_shared<FilRenPass>(index, collection, m_renderParam.get());
 }
 
@@ -117,7 +117,7 @@ void FilRenDelegate::DestroyInstancer(HdInstancer* instancer) {
 }
     
 HdRprim* FilRenDelegate::CreateRprim(TfToken const& typeId, SdfPath const& rprimId) {
-    std::cout << "[ √ CreateRprim ] Called \n";
+    std::cout << "[ o CreateRprim ] Called \n";
 
     if (typeId == HdPrimTypeTokens->mesh) {
         return new FilMesh(rprimId);
@@ -134,7 +134,7 @@ void FilRenDelegate::DestroyRprim(HdRprim* rPrim) {
 }
     
 HdSprim* FilRenDelegate::CreateSprim(TfToken const& typeId, SdfPath const& sprimId) { 
-    std::cout << "[ √ CreateSprim ] Called \n";
+    std::cout << "[ o CreateSprim ] Called \n";
 
     if (typeId == HdPrimTypeTokens->camera) {
         return new FilCamera(sprimId);

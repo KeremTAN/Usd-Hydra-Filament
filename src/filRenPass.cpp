@@ -69,7 +69,7 @@ void FilRenPass::_Execute(HdRenderPassStateSharedPtr const& renderPassState, TfT
     // View'a kamerayı bağla
     m_view->setCamera(m_camera);
 
-    std::cout << "[ √ PASS _Execute ]\n";
+    std::cout << "[ o PASS _Execute ]\n";
 }
 
 /**
