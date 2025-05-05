@@ -5,15 +5,19 @@ PXR_NAMESPACE_OPEN_SCOPE
 // All bits set as true;
 HdDirtyBits FilMesh::GetInitialDirtyBitsMask() const {
 
-    HdDirtyBits mask { 
-      HdChangeTracker::Clean            | HdChangeTracker::InitRepr
-    | HdChangeTracker::DirtyPoints      | HdChangeTracker::DirtyTopology
-    | HdChangeTracker::DirtyTransform   | HdChangeTracker::DirtyVisibility
-    | HdChangeTracker::DirtyCullStyle   | HdChangeTracker::DirtyDoubleSided
-    | HdChangeTracker::DirtyDisplayStyle| HdChangeTracker::DirtySubdivTags
-    | HdChangeTracker::DirtyNormals     | HdChangeTracker::DirtyInstancer
-    | HdChangeTracker::DirtyPrimID      | HdChangeTracker::DirtyRepr
-    | HdChangeTracker::DirtyMaterialId  | HdChangeTracker::DirtyPrimvar };
+    // HdDirtyBits mask { 
+    //   HdChangeTracker::Clean            | HdChangeTracker::InitRepr
+    // | HdChangeTracker::DirtyPoints      | HdChangeTracker::DirtyTopology
+    // | HdChangeTracker::DirtyTransform   | HdChangeTracker::DirtyVisibility
+    // | HdChangeTracker::DirtyCullStyle   | HdChangeTracker::DirtyDoubleSided
+    // | HdChangeTracker::DirtyDisplayStyle| HdChangeTracker::DirtySubdivTags
+    // | HdChangeTracker::DirtyNormals     | HdChangeTracker::DirtyInstancer
+    // | HdChangeTracker::DirtyPrimID      | HdChangeTracker::DirtyRepr
+    // | HdChangeTracker::DirtyMaterialId  | HdChangeTracker::DirtyPrimvar };
+
+    HdDirtyBits mask {
+      HdChangeTracker::InitRepr         | HdChangeTracker::DirtyPoints
+    | HdChangeTracker::DirtyTopology    | HdChangeTracker::DirtyTransform };
 
     return mask;
 }
