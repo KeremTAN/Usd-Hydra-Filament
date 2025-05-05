@@ -5,3 +5,4 @@ third_party/code_examples
 third_party/filament
 third_party/olds
 third_party/usd
+**/test_sphere.usda

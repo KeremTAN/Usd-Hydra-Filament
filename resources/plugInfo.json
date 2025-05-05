@@ -7,7 +7,7 @@
       "LibraryPath": "build/HdTutorial.dylib",
       "Info": {
         "Types": {
-          "HdTutorialRendererPlugin": {
+          "FilRenPlugin": {
             "bases": ["HdRendererPlugin"],
             "displayName": "Filament",
             "priority": 0
